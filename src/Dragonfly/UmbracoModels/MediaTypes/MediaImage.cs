@@ -5,6 +5,7 @@
     using Newtonsoft.Json.Linq;
     using Umbraco.Core.Models;
     using Umbraco.Core.Models.PublishedContent;
+    using Umbraco.Web;
 
     /// <summary>
     /// Marker interface for a media image.
@@ -107,7 +108,7 @@
         /// </summary>
         /// <param name="PreferDictionary">Using the Dictionary is preferred, so if the dictionary value for the language is missing, return data about that. If you'd rather get the default Alt text from the media item (regardless of language) set this to FALSE</param>
         /// <returns></returns>
-        public string GetLocalizedAltText(UmbracoHelper umbraco, bool PreferDictionary = true)
+        public string GetLocalizedAltText(UmbracoHelper Umbraco, bool PreferDictionary = true)
         {
             if (this.ImageAltDictionaryKey == "")
             {
@@ -115,7 +116,7 @@
             }
             else
             {
-                var dictVal = umbraco.GetDictionaryValue(this.ImageAltDictionaryKey);
+                var dictVal = Umbraco.GetDictionaryValue(this.ImageAltDictionaryKey);
 
                 if (dictVal != "")
                 {

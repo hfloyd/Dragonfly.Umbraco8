@@ -6,20 +6,20 @@
 
     public class PublishedContentComparer : IEqualityComparer<IPublishedContent>
         {
-            public bool Equals(IPublishedContent x, IPublishedContent y)
+            public bool Equals(IPublishedContent X, IPublishedContent Y)
             {
-                if (ReferenceEquals(x, y)) return true;
+                if (ReferenceEquals(X, Y)) return true;
 
-                if (ReferenceEquals(x, null) || ReferenceEquals(y, null)) return false;
+                if (ReferenceEquals(X, null) || ReferenceEquals(Y, null)) return false;
 
-                return x.Id == y.Id;
+                return X.Id == Y.Id;
             }
 
-        public int GetHashCode(IPublishedContent obj)
+        public int GetHashCode(IPublishedContent Obj)
             {
-                if (ReferenceEquals(obj, null)) return 0;
+                if (ReferenceEquals(Obj, null)) return 0;
 
-                return obj.Id.GetHashCode();
+                return Obj.Id.GetHashCode();
             }
 
     }

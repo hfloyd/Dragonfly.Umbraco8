@@ -9,11 +9,11 @@
         private readonly NameValueCollection _queryStringParams;
         private readonly HttpCookieCollection _cookies;
 
-        public FakeHttpRequest(NameValueCollection formParams, NameValueCollection queryStringParams, HttpCookieCollection cookies)
+        public FakeHttpRequest(NameValueCollection FormParams, NameValueCollection QueryStringParams, HttpCookieCollection Cookies)
         {
-            _formParams = formParams;
-            _queryStringParams = queryStringParams;
-            _cookies = cookies;
+            _formParams = FormParams;
+            _queryStringParams = QueryStringParams;
+            _cookies = Cookies;
         }
 
         public override NameValueCollection Form

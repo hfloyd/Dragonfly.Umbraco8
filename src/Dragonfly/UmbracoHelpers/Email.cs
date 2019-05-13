@@ -23,7 +23,8 @@ namespace Dragonfly.UmbracoHelpers
     /// </summary>
     public static class Email
     {
-        private const string ThisClassName = "Dragonfly.Umbraco7Helpers.Email";
+        //TODO: Need to figure out Dependency Inject here.... 
+        private const string ThisClassName = "Dragonfly.UmbracoHelpers.Email";
 
         /// <summary>
         /// Data structure for storing mail related items
@@ -48,16 +49,16 @@ namespace Dragonfly.UmbracoHelpers
         /// <summary>
         /// Gets mail variables from EmailMessage document type
         /// </summary>
-        /// <param name="nodeId">
+        /// <param name="NodeId">
         /// The node id of the EmailMessage
         /// </param>
         /// <returns>
         /// The <see cref="MailVariables"/>.
         /// </returns>
-        public static MailVariables GetMailVariables(int nodeId)
+        public static MailVariables GetMailVariables(int NodeId)
         {
             var umbContentService = ApplicationContext.Current.Services.ContentService;
-            var emf = umbContentService.GetById(nodeId);
+            var emf = umbContentService.GetById(NodeId);
 
             MailVariables mailvars = new MailVariables();
             try
@@ -72,8 +73,8 @@ namespace Dragonfly.UmbracoHelpers
             }
             catch (Exception ex)
             {
-                var Msg = string.Format("Error creating or MailVariables. Exception: {0}", ex.Message);
-                LogHelper.Error(typeof(Email), Msg, new Exception(Msg));
+                var msg = string.Format("Error creating or MailVariables. Exception: {0}", ex.Message);
+                LogHelper.Error(typeof(Email), msg, new Exception(msg));
             }
             return mailvars;
         }
@@ -81,32 +82,32 @@ namespace Dragonfly.UmbracoHelpers
         /// <summary>
         /// Attempts to send an email with mail variable package passed-in
         /// </summary>
-        /// <param name="package">
+        /// <param name="Package">
         /// The The <see cref="MailVariables"/> package.
         /// </param>
         /// <returns>
         /// <see cref="bool"/> indicating successful send.
         /// </returns>
-        public static bool TrySendMail(MailVariables package)
+        public static bool TrySendMail(MailVariables Package)
         {
             try
             {
                 var msg = new System.Net.Mail.MailMessage();
-                msg.From = new System.Net.Mail.MailAddress(package.From, HttpUtility.HtmlEncode(package.FromName));
-                msg.Subject = package.Subject;
-                msg.Body = package.BodyContent;
-                msg.IsBodyHtml = package.IsHtml;
+                msg.From = new System.Net.Mail.MailAddress(Package.From, HttpUtility.HtmlEncode(Package.FromName));
+                msg.Subject = Package.Subject;
+                msg.Body = Package.BodyContent;
+                msg.IsBodyHtml = Package.IsHtml;
 
-                msg.To.Add(new System.Net.Mail.MailAddress(HttpUtility.HtmlEncode(package.To), HttpUtility.HtmlEncode(package.ToName)));
+                msg.To.Add(new System.Net.Mail.MailAddress(HttpUtility.HtmlEncode(Package.To), HttpUtility.HtmlEncode(Package.ToName)));
 
-                var smtp = new System.Net.Mail.SmtpClient { EnableSsl = package.EnableSsl };
+                var smtp = new System.Net.Mail.SmtpClient { EnableSsl = Package.EnableSsl };
                 smtp.Send(msg);
                 return true;
             }
             catch (Exception ex)
             {
-                var Msg = string.Concat("TrySendMail: ", string.Format("Error creating or sending email, exception: {0}", ex.Message));
-                LogHelper.Error(typeof(Email), Msg, new Exception(Msg));
+                var msg = string.Concat("TrySendMail: ", string.Format("Error creating or sending email, exception: {0}", ex.Message));
+                LogHelper.Error(typeof(Email), msg, new Exception(msg));
             }
 
             return false;
@@ -206,12 +207,12 @@ namespace Dragonfly.UmbracoHelpers
         /// <summary>
         /// Add an absolute path to all the img tags in the html of an e-mail.
         /// </summary>
-        /// <param name="html"></param>
+        /// <param name="Html"></param>
         /// <returns></returns>
-        public static string AddImgAbsolutePath(string html)
+        public static string AddImgAbsolutePath(string Html)
         {
             HtmlDocument doc = new HtmlDocument();
-            doc.LoadHtml(html);
+            doc.LoadHtml(Html);
 
             var uri = new Uri(HttpContext.Current.Request.Url.AbsoluteUri);
             var domainUrl = string.Format("{0}://{1}", uri.Scheme, uri.Authority);

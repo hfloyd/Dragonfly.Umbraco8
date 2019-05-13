@@ -8,11 +8,12 @@
     using Dragonfly.UmbracoModels;
     using Umbraco.Core.Models;
     using Umbraco.Core.Models.PublishedContent;
-   
+    using Umbraco.Web;
+
 
     public static class Macros
     {
-        private const string ThisClassName = "Dragonfly.Umbraco7Helpers.Macros";
+        private const string ThisClassName = "Dragonfly.UmbracoHelpers.Macros";
 
         /// <summary>
         /// Return an Object for a Macro Parameter
@@ -148,7 +149,7 @@
                 {
                     foreach (var id in contentIds)
                     {
-                        var node = UmbracoHelper.TypedContent(id);
+                        var node = UmbracoHelper.Content(id);
                         if (node != null)
                         {
                             nodesList.Add(node);
@@ -173,7 +174,7 @@
 
             if (value != null && value.ToString() != "" && value.ToString() != "0")
             {
-                var node = UmbracoHelper.TypedContent(value);
+                var node = UmbracoHelper.Content(value);
                 if (node != null)
                 {
                     return node;
@@ -204,7 +205,7 @@
             {
                 //if (value.ToString().StartsWith("umb://media/"))
                 //{
-                    return UmbracoHelper.TypedMedia(value);
+                    return UmbracoHelper.Media(value);
                 //}
             }
             else

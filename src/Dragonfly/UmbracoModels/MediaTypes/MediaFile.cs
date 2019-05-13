@@ -1,7 +1,9 @@
 ﻿namespace Dragonfly.UmbracoModels
 {
+    using Dragonfly.UmbracoHelpers;
     using System.Web;
     using Umbraco.Core.Models;
+    using Umbraco.Core.Models.PublishedContent;
 
     /// <summary>
     /// The MediaFile interface.
@@ -106,5 +108,11 @@
 
             return absUrl;
         }
+
+       
+
+
+
+       
     }
 }

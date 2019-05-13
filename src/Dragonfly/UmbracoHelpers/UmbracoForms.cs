@@ -2,7 +2,7 @@
 {
     public static class UmbracoForms
     {
-        private const string ThisClassName = "Dragonfly.Umbraco7Helpers.UmbracoForms";
+        private const string ThisClassName = "Dragonfly.UmbracoHelpers.UmbracoForms";
 
         public static string GetFieldCodeName(string FieldCssClass)
         {

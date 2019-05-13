@@ -8,9 +8,9 @@
     {
         private readonly string _name;
 
-        public FakeIdentity(string userName)
+        public FakeIdentity(string UserName)
         {
-            _name = userName;
+            _name = UserName;
 
         }
 

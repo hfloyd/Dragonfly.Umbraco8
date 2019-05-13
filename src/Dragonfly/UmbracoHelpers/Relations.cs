@@ -7,7 +7,8 @@
 
     public static class Relations
     {
-        private const string ThisClassName = "Dragonfly.Umbraco7Helpers.Relations";
+        //TODO: Need to figure out Dependency Injection here.... 
+        private const string ThisClassName = "Dragonfly.UmbracoHelpers.Relations";
 
         /// <summary>
         /// Get a list of related node Ids with duplicates removed (esp. for a bi-directional relation)

@@ -9,14 +9,14 @@
     {
         private readonly SessionStateItemCollection _sessionItems;
 
-        public FakeHttpSessionState(SessionStateItemCollection sessionItems)
+        public FakeHttpSessionState(SessionStateItemCollection SessionItems)
         {
-            _sessionItems = sessionItems;
+            _sessionItems = SessionItems;
         }
 
-        public override void Add(string name, object value)
+        public override void Add(string Name, object Value)
         {
-            _sessionItems[name] = value;
+            _sessionItems[Name] = Value;
         }
 
         public override int Count
@@ -40,33 +40,33 @@
             }
         }
 
-        public override object this[string name]
+        public override object this[string Name]
         {
             get
             {
-                return _sessionItems[name];
+                return _sessionItems[Name];
             }
             set
             {
-                _sessionItems[name] = value;
+                _sessionItems[Name] = value;
             }
         }
 
-        public override object this[int index]
+        public override object this[int Index]
         {
             get
             {
-                return _sessionItems[index];
+                return _sessionItems[Index];
             }
             set
             {
-                _sessionItems[index] = value;
+                _sessionItems[Index] = value;
             }
         }
 
-        public override void Remove(string name)
+        public override void Remove(string Name)
         {
-            _sessionItems.Remove(name);
+            _sessionItems.Remove(Name);
         }
     }
 

@@ -1,0 +1,842 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Dragonfly.Umbraco8</name>
+    </assembly>
+    <members>
+        <member name="M:Dragonfly.UmbracoHelpers.ApiControllerHtmlHelper.GetPartialViewHtml(System.Web.Http.Controllers.HttpControllerContext,System.String,System.Web.Mvc.ViewDataDictionary,System.Web.HttpContext)">
+            <summary>
+            Gets the HTML from a partial View from a Controller
+            </summary>
+            <param name="ThisControllerContext"></param>
+            <param name="ViewName"></param>
+            <param name="ViewData"></param>
+            <param name="CurrentContext"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Dragonfly.UmbracoHelpers.ContentExtensions">
+            <summary>
+            Extension methods for Base models
+            </summary>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.ContentExtensions.HasPropertyWithValue(Umbraco.Core.Models.PublishedContent.IPublishedContent,System.String)">
+            <summary>
+            Checks if the model has a property and a value for the property
+            </summary>
+            <param name="Model">
+            The <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/> to inspect
+            </param>
+            <param name="PropertyAlias">
+            The Umbraco property alias on the <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/>
+            </param>
+            <returns>
+            A value indicating whether or not the property exists on the <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/> and has a value
+            </returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.ContentExtensions.GetSafeString(Umbraco.Core.Models.PublishedContent.IPublishedContent,System.String)">
+            <summary>
+            Checks if the model has a property and a value for the property and returns either the string representation
+            of the property or an empty string
+            </summary>
+            <param name="Content">
+            The <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/> that should contain the property
+            </param>
+            <param name="PropertyAlias">
+            The Umbraco property alias.
+            </param>
+            <returns>
+            The <see cref="T:System.String"/>.
+            </returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.ContentExtensions.GetSafeString(Umbraco.Core.Models.PublishedContent.IPublishedContent,System.String,System.String)">
+            <summary>
+            Checks if the model has a property and a value for the property and returns either the string representation
+            of the property or the default value
+            </summary>
+            <param name="Content">
+            The <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/> that should contain the property
+            </param>
+            <param name="PropertyAlias">
+            The Umbraco property alias.
+            </param>
+            <param name="DefaultValue">
+            The default value.
+            </param>
+            <returns>
+            The <see cref="T:System.String"/>.
+            </returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.ContentExtensions.GetSafeDateTime(Umbraco.Core.Models.PublishedContent.IPublishedContent,System.String)">
+            <summary>
+            Gets a safe date time from content
+            </summary>
+            <param name="Content">
+            The content.
+            </param>
+            <param name="PropertyAlias">
+            The property alias.
+            </param>
+            <returns>
+            The <see cref="T:System.DateTime"/>.
+            </returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.ContentExtensions.GetSafeDateTime(Umbraco.Core.Models.PublishedContent.IPublishedContent,System.String,System.DateTime)">
+            <summary>
+            Gets a safe date time from content
+            </summary>
+            <param name="Content">
+            The content.
+            </param>
+            <param name="PropertyAlias">
+            The property alias.
+            </param>
+            <param name="DefaultValue">
+            The default value.
+            </param>
+            <returns>
+            The <see cref="T:System.DateTime"/>.
+            </returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.ContentExtensions.GetSafeGuid(Umbraco.Core.Models.PublishedContent.IPublishedContent,System.String)">
+            <summary>
+            Checks if the model has a property and a value for the property and returns either the Guid representation
+            of the property or the default value
+            </summary>
+            <param name="Content">
+            The <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/>.
+            </param>
+            <param name="PropertyAlias">
+            The Umbraco property alias.
+            </param>
+            <returns>
+            The <see cref="T:System.Guid"/>.
+            </returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.ContentExtensions.GetSafeGuid(Umbraco.Core.Models.PublishedContent.IPublishedContent,System.String,System.Guid)">
+            <summary>
+            Checks if the model has a property and a value for the property and returns either the Guid representation
+            of the property or the default value
+            </summary>
+            <param name="Content">
+            The <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/>.
+            </param>
+            <param name="PropertyAlias">
+            The Umbraco property alias.
+            </param>
+            <param name="DefaultValue">
+            The default Value.
+            </param>
+            <returns>
+            The <see cref="T:System.Guid"/>.
+            </returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.ContentExtensions.GetSafeInt(Umbraco.Core.Models.PublishedContent.IPublishedContent,System.String)">
+            <summary>
+            Checks if the model has a property and a value for the property and returns either the string representation
+            of the property or the default value of 0
+            </summary>
+            <param name="Content">
+            The <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/>
+            </param>
+            <param name="PropertyAlias">
+            The Umbraco property alias.
+            </param>
+            <returns>
+            The <see cref="T:System.Int32"/>.
+            </returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.ContentExtensions.GetSafeInt(Umbraco.Core.Models.PublishedContent.IPublishedContent,System.String,System.Int32)">
+            <summary>
+            Checks if the model has a property and a value for the property and returns either the string representation
+            of the property or the default value of 0
+            </summary>
+            <param name="Content">
+            The <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/>
+            </param>
+            <param name="PropertyAlias">
+            The Umbraco property alias.
+            </param>
+            <param name="DefaultValue">
+            The default Value.
+            </param>
+            <returns>
+            The <see cref="T:System.Int32"/>.
+            </returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.ContentExtensions.GetSafeBool(Umbraco.Core.Models.PublishedContent.IPublishedContent,System.String)">
+            <summary>
+            Checks if the model has a property and a value for the property and returns either the string representation
+            of the property or the default value of false
+            </summary>
+            <param name="Content">
+            The <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/>
+            </param>
+            <param name="PropertyAlias">
+            The Umbraco property alias.
+            </param>
+            <returns>
+            The <see cref="T:System.Boolean"/>.
+            </returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.ContentExtensions.GetSafeBool(Umbraco.Core.Models.PublishedContent.IPublishedContent,System.String,System.Boolean)">
+            <summary>
+            Checks if the model has a property and a value for the property and returns either the string representation
+            of the property or the default value of false
+            </summary>
+            <param name="Content">
+            The <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/>
+            </param>
+            <param name="PropertyAlias">
+            The Umbraco property alias.
+            </param>
+            <param name="DefaultValue">
+            The default Value.
+            </param>
+            <returns>
+            The <see cref="T:System.Boolean"/>.
+            </returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.ContentExtensions.GetSafeHtmlString(Umbraco.Core.Models.PublishedContent.IPublishedContent,System.String)">
+            <summary>
+            Checks if the model has a property and a value for the property and returns either the <see cref="T:System.Web.IHtmlString"/> representation
+            of the property or an empty <see cref="T:System.Web.IHtmlString"/>
+            </summary>
+            <param name="Content">
+            The <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/> that should contain the property
+            </param>
+            <param name="PropertyAlias">
+            The Umbraco property alias.
+            </param>
+            <returns>
+            The <see cref="T:System.Web.IHtmlString"/>.
+            </returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.ContentExtensions.GetSafeHtmlString(Umbraco.Core.Models.PublishedContent.IPublishedContent,System.String,System.String)">
+            <summary>
+            Checks if the model has a property and a value for the property and returns either the <see cref="T:System.Web.IHtmlString"/> representation
+            of the property or the default <see cref="T:System.Web.IHtmlString"/>
+            </summary>
+            <param name="Content">
+            The <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/> that should contain the property
+            </param>
+            <param name="PropertyAlias">
+            The Umbraco property alias
+            </param>
+            <param name="DefaultValue">
+            The default value.
+            </param>
+            <returns>
+            The <see cref="T:System.Web.IHtmlString"/>.
+            </returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.ContentExtensions.GetSafeContent(Umbraco.Core.Models.PublishedContent.IPublishedContent,System.String,Umbraco.Web.UmbracoHelper)">
+            <summary>
+            Gets a content Id from a content picker and renders it as <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/>.
+            </summary>
+            <param name="Content">
+            The current <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/>.
+            </param>
+            <param name="PropertyAlias">
+            The property alias.
+            </param>
+            <param name="Umbraco">
+            The <see cref="T:Umbraco.Web.UmbracoHelper"/>.
+            </param>
+            <returns>
+            The <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/> from the content picker.
+            </returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.Dictionary.GetDictionaryOrPlaceholder(Umbraco.Web.UmbracoHelper,System.String,System.String)">
+            <summary>
+            Return a dictionary value or a placeholder representing the dictionary value which needs to be added
+            </summary>
+            <param name="Umbraco">(Extension of UmbracoHelper)</param>
+            <param name="DictionaryKey">The dictionary key to lookup</param>
+            <param name="DefaultValue">A default value to return instead of the placeholder if the key is not found (optional)</param>
+            <returns>Either the display text, or a placeholder surrounded by [square brackets]</returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.Macros.GetSafeParamObject(System.Collections.Generic.IDictionary{System.String,System.Object},System.String,System.Object)">
+            <summary>
+            Return an Object for a Macro Parameter
+            </summary>
+            <param name="MacrosCollection">ex: 'Model.MacroParameters'</param>
+            <param name="Key">Parameter alias</param>
+            <param name="DefaultNullValue"></param>
+            <returns>Default null value - if provided, otherwise, NULL</returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.Macros.GetSafeParamString(System.Collections.Generic.IDictionary{System.String,System.Object},System.String,System.String)">
+            <summary>
+            Return a String for a Macro Parameter
+            </summary>
+            <param name="MacrosCollection">ex: 'Model.MacroParameters'</param>
+            <param name="Key">Parameter alias</param>
+            <param name="DefaultNullValue">Default null value - if provided, otherwise, an Empty String</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.Macros.GetSafeParamHtmlString(System.Collections.Generic.IDictionary{System.String,System.Object},System.String,System.String)">
+            <summary>
+            Return an IHtmlString for a Macro Parameter
+            </summary>
+            <param name="MacrosCollection">ex: 'Model.MacroParameters'</param>
+            <param name="Key">Parameter alias</param>
+            <param name="DefaultNullValue">Default null value - if provided, otherwise, an Empty String</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.Macros.GetSafeParamInt(System.Collections.Generic.IDictionary{System.String,System.Object},System.String,System.Int32)">
+            <summary>
+            Return an Int for a Macro Parameter
+            </summary>
+            <param name="MacrosCollection">ex: 'Model.MacroParameters'</param>
+            <param name="Key">Parameter alias</param>
+            <param name="DefaultNullValue"></param>
+            <returns>Default null value - if provided, otherwise, 0</returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.Macros.GetSafeParamBool(System.Collections.Generic.IDictionary{System.String,System.Object},System.String,System.Boolean)">
+            <summary>
+            Return a Boolean for a Macro Parameter
+            </summary>
+            <remarks>Supports Numeric (1) and Text (True and true) values.</remarks>
+            <param name="MacrosCollection">ex: 'Model.MacroParameters'</param>
+            <param name="Key">Parameter alias</param>
+            <param name="DefaultNullValue"></param>
+            <returns>Default null value - if provided, otherwise, false</returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.Macros.GetSafeParamMultiContent(System.Collections.Generic.IDictionary{System.String,System.Object},System.String,Umbraco.Web.UmbracoHelper)">
+            <summary>
+            Returns a collection of IPublishedContent from a MultiContentPicker Macro Parameter
+            </summary>
+            <param name="MacrosCollection">ex: 'Model.MacroParameters'</param>
+            <param name="Key">Parameter alias</param>
+            <param name="UmbracoHelper">ex: 'Umbraco'</param>
+            <returns>IEnumerable&lt;IPublishedContent&gt;</returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.Macros.GetSafeParamContent(System.Collections.Generic.IDictionary{System.String,System.Object},System.String,Umbraco.Web.UmbracoHelper)">
+            <summary>
+            Returns an IPublishedContent from a ContentPicker Macro Parameter
+            </summary>
+            <param name="MacrosCollection">ex: 'Model.MacroParameters'</param>
+            <param name="Key">Parameter alias</param>
+            <param name="UmbracoHelper">ex: 'Umbraco'</param>
+            <returns>IPublishedContent or NULL</returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.Macros.GetSafeParamMediaContent(System.Collections.Generic.IDictionary{System.String,System.Object},System.String,Umbraco.Web.UmbracoHelper)">
+            <summary>
+            Returns an IPublishedContent from a ContentPicker Macro Parameter
+            </summary>
+            <param name="MacrosCollection">ex: 'Model.MacroParameters'</param>
+            <param name="Key">Parameter alias</param>
+            <param name="UmbracoHelper">ex: 'Umbraco'</param>
+            <returns>IPublishedContent or NULL</returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.Mvc.IsRenderingInBackOffice(System.Uri)">
+            <summary>
+            Indicates whether the current request is coming from the Umbraco back-office. 
+            Most useful in Macros to avoid 'no current PublishedContentRequest.' error.
+            </summary>
+            <param name="ThisRequestUrl">Pass in "Request.Url" or "this.Request.Url"</param>
+            <returns>TRUE if it is a back-office request, FALSE if not</returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.Mvc.RedirectToNewWindow(System.Web.HttpResponse,System.String)">
+            <summary>
+            NOTE: This needs to be rendered (via @Html.Raw(...), etc.) since it relies upon script tags
+            </summary>
+            <param name="Response"></param>
+            <param name="Url"></param>
+            <returns></returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Dragonfly.UmbracoModels.MediaExtensions.ToMediaFile(Umbraco.Core.Models.PublishedContent.IPublishedContent)" -->
+        <member name="M:Dragonfly.UmbracoModels.MediaExtensions.ToMediaFiles(System.Collections.Generic.IEnumerable{Umbraco.Core.Models.PublishedContent.IPublishedContent})">
+            <summary>
+            Creates a collection of <see cref="T:Dragonfly.UmbracoModels.MediaFile"/> from a list of <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/> (media)
+            </summary>
+            <param name="Contents">
+            The collection of <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/>
+            </param>
+            <returns>
+            The collection of <see cref="T:Dragonfly.UmbracoModels.MediaFile"/>.
+            </returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoModels.MediaExtensions.ToMediaImages(System.Collections.Generic.IEnumerable{Umbraco.Core.Models.PublishedContent.IPublishedContent})">
+            <summary>
+            Creates a collection of <see cref="T:Dragonfly.UmbracoModels.MediaImage"/> from a list of <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/> (media)
+            </summary>
+            <param name="Contents">
+            The collection of <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/>
+            </param>
+            <returns>
+            The collection of <see cref="T:Dragonfly.UmbracoModels.MediaImage"/>.
+            </returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoModels.MediaExtensions.ToMediaImage(Umbraco.Core.Models.PublishedContent.IPublishedContent,System.String,System.String,System.String)">
+            <summary>
+            Utility extension to convert <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/> to an <see cref="T:Dragonfly.UmbracoModels.MediaImage"/>
+            </summary>
+            <returns>
+            The <see cref="T:Dragonfly.UmbracoModels.MediaImage"/>.
+            </returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoModels.MediaExtensions.ImgUrlToImage(System.String,System.String,System.String,System.String)">
+            <summary>
+            Create a <see cref="T:Dragonfly.UmbracoModels.MediaImage"/> from an Image URL
+            </summary>
+            <returns>
+            The <see cref="T:Dragonfly.UmbracoModels.MediaImage"/>.
+            </returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoModels.MediaExtensions.GetSafeMediaFile(Umbraco.Core.Models.PublishedContent.IPublishedContent,Umbraco.Web.UmbracoHelper,System.String)">
+            <summary>
+            Checks if the model has a property and a value for the property and returns either the <see cref="T:Dragonfly.UmbracoModels.IMediaFile"/> representation
+            of the property or the default <see cref="T:Dragonfly.UmbracoModels.IMediaFile"/>
+            </summary>
+            <param name="Content">
+            The <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/>
+            </param>
+            <param name="Umbraco">
+            The <see cref="T:Umbraco.Web.UmbracoHelper"/>
+            </param>
+            <param name="PropertyAlias">
+            The Umbraco property alias.
+            </param>
+            <param name="defaultImage">
+            The default image.
+            </param>
+            <returns>
+            The <see cref="T:Dragonfly.UmbracoModels.IMediaFile"/>.
+            </returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoModels.MediaExtensions.GetSafeMediaFiles(Umbraco.Core.Models.PublishedContent.IPublishedContent,System.String,Umbraco.Web.UmbracoHelper)">
+            <summary>
+            Checks if the model has a property and a value for the property and returns either the <see cref="T:Dragonfly.UmbracoModels.IMediaFile"/> representation
+            of the property or the default <see cref="T:Dragonfly.UmbracoModels.IMediaFile"/>s
+            </summary>
+            <param name="Content">
+            The content which has the media picker property
+            </param>
+            <param name="Umbraco">
+            The <see cref="T:Umbraco.Web.UmbracoHelper"/>
+            </param>
+            <param name="PropertyAlias">
+            The property alias of the media picker
+            </param>
+            <param name="defaultFile">
+            The default File.
+            </param>
+            <returns>
+            A collection of <see cref="T:Dragonfly.UmbracoModels.IMediaFile"/>.
+            </returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoModels.MediaExtensions.GetSafeMediaFiles(Umbraco.Core.Models.PublishedContent.IPublishedContent,System.String,Umbraco.Web.UmbracoHelper,Dragonfly.UmbracoModels.IMediaFile)">
+            <summary>
+            Checks if the model has a property and a value for the property and returns either the <see cref="T:Dragonfly.UmbracoModels.IMediaFile"/> representation
+            of the property or the default <see cref="T:Dragonfly.UmbracoModels.IMediaFile"/>s
+            </summary>
+            <param name="Content">
+            The content which has the media picker property
+            </param>
+            <param name="Umbraco">
+            The <see cref="T:Umbraco.Web.UmbracoHelper"/>
+            </param>
+            <param name="PropertyAlias">
+            The property alias of the media picker
+            </param>
+            <param name="DefaultFile">
+            The default File.
+            </param>
+            <returns>
+            A collection of <see cref="T:Dragonfly.UmbracoModels.IMediaFile"/>.
+            </returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoModels.MediaExtensions.GetSafeImage(Umbraco.Core.Models.PublishedContent.IPublishedContent,System.String,Umbraco.Web.UmbracoHelper)">
+            <summary>
+            Checks if the model has a property and a value for the property and returns either the <see cref="!:IImage"/> representation
+            of the property or the default <see cref="T:Dragonfly.UmbracoModels.IMediaImage"/>
+            </summary>
+            <param name="Content">
+            The <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/>
+            </param>
+            <param name="Umbraco">
+            The <see cref="T:Umbraco.Web.UmbracoHelper"/>
+            </param>
+            <param name="PropertyAlias">
+            The Umbraco property alias.
+            </param>
+            <returns>
+            The <see cref="T:Dragonfly.UmbracoModels.IMediaImage"/>.
+            </returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoModels.MediaExtensions.GetSafeImage(Umbraco.Core.Models.PublishedContent.IPublishedContent,System.String,Umbraco.Web.UmbracoHelper,Dragonfly.UmbracoModels.IMediaImage)">
+            <summary>
+            Checks if the model has a property and a value for the property and returns either the <see cref="!:IImage"/> representation
+            of the property or the default <see cref="T:Dragonfly.UmbracoModels.IMediaImage"/>
+            </summary>
+            <param name="Content">
+            The <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/>
+            </param>
+            <param name="Umbraco">
+            The <see cref="T:Umbraco.Web.UmbracoHelper"/>
+            </param>
+            <param name="PropertyAlias">
+            The Umbraco property alias.
+            </param>
+            <param name="DefaultImage">
+            The default image.
+            </param>
+            <returns>
+            The <see cref="T:Dragonfly.UmbracoModels.IMediaImage"/>.
+            </returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoModels.MediaExtensions.GetSafeImages(Umbraco.Core.Models.PublishedContent.IPublishedContent,System.String,Umbraco.Web.UmbracoHelper,Dragonfly.UmbracoModels.IMediaImage)">
+            <summary>
+            Checks if the model has a property and a value for the property and returns either the <see cref="T:Dragonfly.UmbracoModels.IMediaImage"/> representation
+            of the property or the default <see cref="T:Dragonfly.UmbracoModels.IMediaImage"/>s
+            </summary>
+            <param name="Content">
+            The content which has the media picker property
+            </param>
+            <param name="Umbraco">
+            The <see cref="T:Umbraco.Web.UmbracoHelper"/>
+            </param>
+            <param name="PropertyAlias">
+            The property alias of the media picker
+            </param>
+            <param name="DefaultImage">
+            A default image to return if there are no results
+            </param>
+            <returns>
+            A collection of <see cref="T:Dragonfly.UmbracoModels.IMediaImage"/>.
+            </returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoModels.MediaExtensions.GetSafeImages(Umbraco.Core.Models.PublishedContent.IPublishedContent,System.String,Umbraco.Web.UmbracoHelper)">
+            <summary>
+            Checks if the model has a property and a value for the property and returns either the <see cref="T:Dragonfly.UmbracoModels.IMediaImage"/> representation
+            of the property or the default <see cref="T:Dragonfly.UmbracoModels.IMediaImage"/>s
+            </summary>
+            <param name="Content">
+            The content which has the media picker property
+            </param>
+            <param name="Umbraco">
+            The <see cref="T:Umbraco.Web.UmbracoHelper"/>
+            </param>
+            <param name="PropertyAlias">
+            The property alias of the media picker
+            </param>
+            <param name="defaultImage">
+            A default image to return if there are no results
+            </param>
+            <returns>
+            A collection of <see cref="T:Dragonfly.UmbracoModels.IMediaImage"/>.
+            </returns>
+        </member>
+        <member name="T:Dragonfly.UmbracoModels.IMediaFile">
+            <summary>
+            The MediaFile interface.
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.IMediaFile.Content">
+            <summary>
+            Gets or sets the <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/> that this image represents
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.IMediaFile.Id">
+            <summary>
+            Gets or sets the id.
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.IMediaFile.Name">
+            <summary>
+            Gets or sets the name.
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.IMediaFile.Url">
+            <summary>
+            Gets or sets the url.
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.IMediaFile.Bytes">
+            <summary>
+            Gets or sets the bytes.
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.IMediaFile.Extension">
+            <summary>
+            Gets or sets the extension.
+            </summary>
+        </member>
+        <member name="T:Dragonfly.UmbracoModels.MediaFile">
+            <summary>
+            Represents a file.
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.MediaFile.Content">
+            <summary>
+            Gets or sets the <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/> that this file represents
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.MediaFile.Id">
+            <summary>
+            Gets or sets the id.
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.MediaFile.Name">
+            <summary>
+            Gets or sets the name.
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.MediaFile.Url">
+            <summary>
+            Gets or sets the url.
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.MediaFile.Bytes">
+            <summary>
+            Gets or sets the bytes.
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.MediaFile.Extension">
+            <summary>
+            Gets or sets the extension.
+            </summary>
+        </member>
+        <member name="M:Dragonfly.UmbracoModels.MediaFile.AbsoluteUrl(System.String)">
+            <summary>
+            Gets the full url, including domain.
+            </summary>
+            <param name="AlternateDomain">If blank, will use the current hostname.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Dragonfly.UmbracoModels.IMediaImage">
+            <summary>
+            Marker interface for a media image.
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.IMediaImage.ImageAltText">
+            <summary>
+            Gets or sets the Alt Text.
+            Default uses the MediaType Property "ImageAltText" or "ImageAltDictionaryKey"
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.IMediaImage.ImageAltDictionaryKey">
+            <summary>
+            Gets or sets the Alt Text.
+            </summary>
+        </member>
+        <member name="T:Dragonfly.UmbracoModels.MediaImage">
+            <summary>
+            Represents an image from the Media section of Umbraco
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.MediaImage.Content">
+            <summary>
+            Gets or sets the <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/> that this image represents
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.MediaImage.Id">
+            <summary>
+            Gets or sets the id.
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.MediaImage.Name">
+            <summary>
+            Gets or sets the name.
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.MediaImage.Url">
+            <summary>
+            Gets or sets the url.
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.MediaImage.Bytes">
+            <summary>
+            Gets or sets the bytes.
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.MediaImage.Extension">
+            <summary>
+            Gets or sets the extension.
+            </summary>
+        </member>
+        <member name="M:Dragonfly.UmbracoModels.MediaImage.GetLocalizedAltText(Umbraco.Web.UmbracoHelper,System.Boolean)">
+            <summary>
+            Returns a localized alt text, if a Dictionary Key and/or Alt Text have been specified
+            </summary>
+            <param name="PreferDictionary">Using the Dictionary is preferred, so if the dictionary value for the language is missing, return data about that. If you'd rather get the default Alt text from the media item (regardless of language) set this to FALSE</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoModels.MediaImage.GetCropUrl(System.Int32,System.Int32)">
+            <summary>
+            Returns a Url to crop the image
+            </summary>
+            <param name="Width">Width in pixels</param>
+            <param name="Height">Height in pixels</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoModels.MediaImage.GetResizeUrl(System.Int32,System.Int32,System.String,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.String}})">
+            <summary>
+            Returns a url for a resized version
+            </summary>
+            <param name="Height">Pixel Height (use zero to exclude value)</param>
+            <param name="Width">Pixel Width (use zero to exclude value)</param>
+            <param name="BgColorForPadding">Hex code for color used to fill background, since there is no up-sizing. Example: "#FFFFFF"</param>
+            <param name="AdditionalParameters">List of Key/Value Pairs of additional ImageProcessor options</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoModels.MediaImage.GetResizeUrl(System.Int32,System.Int32,System.String)">
+            <summary>
+            Returns a url for a resized version
+            </summary>
+            <param name="Height">Pixel Height (use zero to exclude value)</param>
+            <param name="Width">Pixel Width (use zero to exclude value)</param>
+            <param name="BgColorForPadding">Hex code for color used to fill background, since there is no up-sizing. Example: "#FFFFFF"</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoModels.MediaImage.GetResizeUrl(System.Int32,System.Int32,System.String,System.String)">
+            <summary>
+            Returns a url for a resized version
+            </summary>
+            <param name="Height">Pixel Height (use zero to exclude value)</param>
+            <param name="Width">Pixel Width (use zero to exclude value)</param>
+            <param name="BgColorForPadding">Hex code for color used to fill background, since there is no up-sizing. Example: "#FFFFFF"</param>
+            <param name="AdditionalParametersAsString">Separated string of Key/Value Pairs of additional ImageProcessor options</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoModels.MediaImage.AbsoluteUrl(System.String)">
+            <summary>
+            Gets the full url, including domain.
+            </summary>
+            <param name="AlternateDomain">If blank, will use the current hostname.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Dragonfly.UmbracoModels.ILink">
+            <summary>
+            Defines a hyperlink
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.ILink.ContentId">
+            <summary>
+            Gets or sets Umbraco content id if applicable
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.ILink.ContentNode">
+            <summary>
+            Gets or sets Umbraco content node, if applicable
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.ILink.ContentTypeAlias">
+            <summary>
+            Gets or sets the content type alias.
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.ILink.Title">
+            <summary>
+            Gets or sets title of the link
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.ILink.Url">
+            <summary>
+            Gets or sets Url of the link
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.ILink.Target">
+            <summary>
+            Gets or sets Target of the link
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.ILink.ElementId">
+            <summary>
+            Gets or sets id attribute for the link
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.ILink.CssClass">
+            <summary>
+            Gets or sets CSS class of the link
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.ILink.IsMedia">
+            <summary>
+            Is this a link to a media item?
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.ILink.MediaFile">
+            <summary>
+            If it is a media item, this is the media info
+            </summary>
+        </member>
+        <member name="T:Dragonfly.UmbracoModels.Link">
+            <summary>
+            Represents a hyperlink
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.Link.ContentId">
+            <summary>
+            Gets or sets the Umbraco Content Id
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.Link.ContentNode">
+            <summary>
+            Gets or sets the content node.
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.Link.ContentTypeAlias">
+            <summary>
+            Gets or sets the content type alias.
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.Link.Title">
+            <summary>
+            Gets or sets the link title
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.Link.Url">
+            <summary>
+            Gets or sets the link Url
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.Link.Target">
+            <summary>
+            Gets or sets the link target
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.Link.ElementId">
+            <summary>
+            Gets or sets the link element id
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.Link.CssClass">
+            <summary>
+            Gets or sets the link's CSS class
+            </summary>
+        </member>
+        <member name="M:Dragonfly.UmbracoModels.Link.AbsoluteUrl(System.String)">
+            <summary>
+            Gets the full url, including domain.
+            </summary>
+            <param name="AlternateDomain">If blank, will use the current hostname.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Dragonfly.UmbracoModels.ILinkTier">
+            <summary>
+            Defines a link tier
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.ILinkTier.Children">
+            <summary>
+            Gets or sets the children of the current tier
+            </summary>
+        </member>
+        <member name="T:Dragonfly.UmbracoModels.LinkTier">
+            <summary>
+            Represents a link tier
+            </summary>
+        </member>
+        <member name="M:Dragonfly.UmbracoModels.LinkTier.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Dragonfly.UmbracoModels.LinkTier"/> class.
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.LinkTier.Children">
+            <summary>
+            Gets or sets the children <see cref="T:Dragonfly.UmbracoModels.ILinkTier"/>
+            </summary>
+        </member>
+    </members>
+</doc>

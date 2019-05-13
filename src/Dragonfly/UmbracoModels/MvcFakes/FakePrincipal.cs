@@ -8,10 +8,10 @@
         private readonly IIdentity _identity;
         private readonly string[] _roles;
 
-        public FakePrincipal(IIdentity identity, string[] roles)
+        public FakePrincipal(IIdentity Identity, string[] Roles)
         {
-            _identity = identity;
-            _roles = roles;
+            _identity = Identity;
+            _roles = Roles;
         }
 
         public IIdentity Identity
@@ -19,11 +19,11 @@
             get { return _identity; }
         }
 
-        public bool IsInRole(string role)
+        public bool IsInRole(string Role)
         {
             if (_roles == null)
                 return false;
-            return _roles.Contains(role);
+            return _roles.Contains(Role);
         }
     }
 

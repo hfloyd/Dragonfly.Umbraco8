@@ -13,13 +13,13 @@
         private readonly HttpCookieCollection _cookies;
         private readonly SessionStateItemCollection _sessionItems;
 
-        public FakeHttpContext(FakePrincipal principal, NameValueCollection formParams, NameValueCollection queryStringParams, HttpCookieCollection cookies, SessionStateItemCollection sessionItems )
+        public FakeHttpContext(FakePrincipal Principal, NameValueCollection FormParams, NameValueCollection QueryStringParams, HttpCookieCollection Cookies, SessionStateItemCollection SessionItems )
         {
-            _principal = principal;
-            _formParams = formParams;
-            _queryStringParams = queryStringParams;
-            _cookies = cookies;
-            _sessionItems = sessionItems;
+            _principal = Principal;
+            _formParams = FormParams;
+            _queryStringParams = QueryStringParams;
+            _cookies = Cookies;
+            _sessionItems = SessionItems;
         }
 
         public override HttpRequestBase Request

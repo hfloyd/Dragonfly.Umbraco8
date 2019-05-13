@@ -6,7 +6,7 @@
 
     public class FakeView : IView
     {
-        public void Render(ViewContext viewContext, TextWriter writer)
+        public void Render(ViewContext ViewContext, TextWriter Writer)
         {
             throw new InvalidOperationException();
         }

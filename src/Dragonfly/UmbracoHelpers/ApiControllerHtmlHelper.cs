@@ -56,19 +56,19 @@
         /// Gets the HTML from a partial View from a Controller
         /// </summary>
         /// <param name="ThisControllerContext"></param>
-        /// <param name="viewName"></param>
-        /// <param name="viewData"></param>
-        /// <param name="currentContext"></param>
+        /// <param name="ViewName"></param>
+        /// <param name="ViewData"></param>
+        /// <param name="CurrentContext"></param>
         /// <returns></returns>
-        public static string GetPartialViewHtml(HttpControllerContext ThisControllerContext, string viewName, ViewDataDictionary viewData, HttpContext currentContext)
+        public static string GetPartialViewHtml(HttpControllerContext ThisControllerContext, string ViewName, ViewDataDictionary ViewData, HttpContext CurrentContext)
         {
-            var mvcControllerContext = ApiControllerToMvcController(ThisControllerContext, currentContext);
-            var viewResult = ViewEngines.Engines.FindView(mvcControllerContext, viewName, null);
+            var mvcControllerContext = ApiControllerToMvcController(ThisControllerContext, CurrentContext);
+            var viewResult = ViewEngines.Engines.FindView(mvcControllerContext, ViewName, null);
 
             StringWriter stringWriter;
-            if (viewData == null)
+            if (ViewData == null)
             {
-                viewData = new ViewDataDictionary();
+                ViewData = new ViewDataDictionary();
             }
 
             using (stringWriter = new StringWriter())
@@ -76,7 +76,7 @@
                 var viewContext = new ViewContext(
                     mvcControllerContext,
                     viewResult.View,
-                    viewData,
+                    ViewData,
                     mvcControllerContext.Controller.TempData,
                     stringWriter);
 

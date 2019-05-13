@@ -6,7 +6,7 @@
     
     public static class Mvc
     {
-        private const string ThisClassName = "Dragonfly.Umbraco7Helpers.Mvc";
+        private const string ThisClassName = "Dragonfly.UmbracoHelpers.Mvc";
 
         #region GetSafeViewData
 
@@ -103,11 +103,11 @@
         /// Indicates whether the current request is coming from the Umbraco back-office. 
         /// Most useful in Macros to avoid 'no current PublishedContentRequest.' error.
         /// </summary>
-        /// <param name="thisRequestUrl">Pass in "Request.Url" or "this.Request.Url"</param>
+        /// <param name="ThisRequestUrl">Pass in "Request.Url" or "this.Request.Url"</param>
         /// <returns>TRUE if it is a back-office request, FALSE if not</returns>
-        public static bool IsRenderingInBackOffice(System.Uri thisRequestUrl)
+        public static bool IsRenderingInBackOffice(System.Uri ThisRequestUrl)
         {
-            var path = thisRequestUrl.AbsolutePath;
+            var path = ThisRequestUrl.AbsolutePath;
 
             if (path.Contains("GetMacroResultAsHtmlForEditor"))
             {
@@ -125,17 +125,17 @@
         /// <summary>
         /// NOTE: This needs to be rendered (via @Html.Raw(...), etc.) since it relies upon script tags
         /// </summary>
-        /// <param name="response"></param>
-        /// <param name="url"></param>
+        /// <param name="Response"></param>
+        /// <param name="Url"></param>
         /// <returns></returns>
-        public static string RedirectToNewWindow(this HttpResponse response, string url)
+        public static string RedirectToNewWindow(this HttpResponse Response, string Url)
         {
             //Requires jquery....
             //    return string.Format(
             //        "<script>$(document).ready(function () {{ window.open( '{0}' );}});</script>",
             //        url);
 
-            return string.Format("<script> window.open( \"{0}\" );</script>", url);
+            return string.Format("<script> window.open( \"{0}\" );</script>", Url);
         }
     }
 }

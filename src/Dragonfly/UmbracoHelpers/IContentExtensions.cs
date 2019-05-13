@@ -8,7 +8,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Dragonfly.Umbraco7Helpers
+namespace Dragonfly.UmbracoHelpers
 {
     using System;
     using System.Collections.Generic;
@@ -29,18 +29,18 @@ namespace Dragonfly.Umbraco7Helpers
         /// <summary>
         /// Convert an IContent to an IPublishedContent.
         /// </summary>
-        /// <param name="content">
+        /// <param name="Content">
         /// The content.
         /// </param>
-        /// <param name="isPreview">
+        /// <param name="IsPreview">
         /// The is preview.
         /// </param>
         /// <returns>
         /// The <see cref="IPublishedContent"/>.
         /// </returns>
-        public static IPublishedContent ToPublishedContent(this IContent content, bool isPreview = false)
+        public static IPublishedContent ToPublishedContent(this IContent Content, bool IsPreview = false)
         {
-            return new PublishedContent(content, isPreview);
+            return new PublishedContent(Content, IsPreview);
         }
     }
 
@@ -48,56 +48,56 @@ namespace Dragonfly.Umbraco7Helpers
     /// The published content.
     /// </summary>
     [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Reviewed. Suppression is OK here.")]
-    public class PublishedContent : PublishedContentWithKeyBase
+    public class PublishedContent : PublishedContentWithKeyBase, IPublishedContent
     {
-        private readonly PublishedContentType contentType;
+        private readonly PublishedContentType _contentType;
 
-        private readonly IContent inner;
+        private readonly IContent _inner;
 
-        private readonly bool isPreviewing;
+        private readonly bool _isPreviewing;
 
-        private readonly Lazy<string> lazyCreatorName;
+        private readonly Lazy<string> _lazyCreatorName;
 
-        private readonly Lazy<string> lazyUrlName;
+        private readonly Lazy<string> _lazyUrlName;
 
-        private readonly Lazy<string> lazyWriterName;
+        private readonly Lazy<string> _lazyWriterName;
 
-        private readonly IPublishedProperty[] properties;
+        private readonly IPublishedProperty[] _properties;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PublishedContent"/> class.
         /// </summary>
-        /// <param name="inner">
+        /// <param name="Inner">
         /// The inner.
         /// </param>
-        /// <param name="isPreviewing">
+        /// <param name="IsPreviewing">
         /// The is previewing.
         /// </param>
-        public PublishedContent(IContent inner, bool isPreviewing)
+        public PublishedContent(IContent Inner, bool IsPreviewing)
         {
-            if (inner == null)
+            if (Inner == null)
             {
                 throw new NullReferenceException("inner");
             }
 
-            this.inner = inner;
-            this.isPreviewing = isPreviewing;
+            this._inner = Inner;
+            this._isPreviewing = IsPreviewing;
 
-            this.lazyUrlName = new Lazy<string>(() => this.inner.GetUrlSegment().ToLower());
+            this._lazyUrlName = new Lazy<string>(() => this._inner.GetUrlSegment().ToLower());
 #pragma warning disable 618
-            this.lazyCreatorName = new Lazy<string>(() => this.inner.GetCreatorProfile().Name);
+            this._lazyCreatorName = new Lazy<string>(() => this._inner.GetCreatorProfile().Name);
 #pragma warning restore 618
 #pragma warning disable 618
-            this.lazyWriterName = new Lazy<string>(() => this.inner.GetWriterProfile().Name);
+            this._lazyWriterName = new Lazy<string>(() => this._inner.GetWriterProfile().Name);
 #pragma warning restore 618
 
-            this.contentType = PublishedContentType.Get(PublishedItemType.Content, this.inner.ContentType.Alias);
+            this._contentType = PublishedContentType.Get(PublishedItemType.Content, this._inner.ContentType.Alias);
 
-            this.properties =
+            this._properties =
                 MapProperties(
-                    this.contentType.PropertyTypes,
-                    this.inner.Properties,
-                    (t, v) => new PublishedProperty(t, v, this.isPreviewing)).ToArray();
+                    this._contentType.PropertyTypes,
+                    this._inner.Properties,
+                    (T, V) => new PublishedProperty(T, V, this._isPreviewing)).ToArray();
         }
 
         ///// <summary>
@@ -162,7 +162,7 @@ namespace Dragonfly.Umbraco7Helpers
         {
             get
             {
-                return this.inner.Name;
+                return this._inner.Name;
             }
         }
 
@@ -173,7 +173,7 @@ namespace Dragonfly.Umbraco7Helpers
         {
             get
             {
-                return this.inner.Level;
+                return this._inner.Level;
             }
         }
 
@@ -184,7 +184,7 @@ namespace Dragonfly.Umbraco7Helpers
         {
             get
             {
-                return this.inner.Path;
+                return this._inner.Path;
             }
         }
 
@@ -195,7 +195,7 @@ namespace Dragonfly.Umbraco7Helpers
         {
             get
             {
-                return this.inner.SortOrder;
+                return this._inner.SortOrder;
             }
         }
 
@@ -206,7 +206,7 @@ namespace Dragonfly.Umbraco7Helpers
         {
             get
             {
-                return this.inner.Version;
+                return this._inner.Version;
             }
         }
 
@@ -217,7 +217,7 @@ namespace Dragonfly.Umbraco7Helpers
         {
             get
             {
-                return this.inner.Template == null ? 0 : this.inner.Template.Id;
+                return this._inner.Template == null ? 0 : this._inner.Template.Id;
             }
         }
 
@@ -228,7 +228,7 @@ namespace Dragonfly.Umbraco7Helpers
         {
             get
             {
-                return this.lazyUrlName.Value;
+                return this._lazyUrlName.Value;
             }
         }
 
@@ -239,7 +239,7 @@ namespace Dragonfly.Umbraco7Helpers
         {
             get
             {
-                return this.inner.CreateDate;
+                return this._inner.CreateDate;
             }
         }
 
@@ -250,7 +250,7 @@ namespace Dragonfly.Umbraco7Helpers
         {
             get
             {
-                return this.inner.UpdateDate;
+                return this._inner.UpdateDate;
             }
         }
 
@@ -261,7 +261,7 @@ namespace Dragonfly.Umbraco7Helpers
         {
             get
             {
-                return this.inner.CreatorId;
+                return this._inner.CreatorId;
             }
         }
 
@@ -272,7 +272,7 @@ namespace Dragonfly.Umbraco7Helpers
         {
             get
             {
-                return this.lazyCreatorName.Value;
+                return this._lazyCreatorName.Value;
             }
         }
 
@@ -283,7 +283,7 @@ namespace Dragonfly.Umbraco7Helpers
         {
             get
             {
-                return this.inner.WriterId;
+                return this._inner.WriterId;
             }
         }
 
@@ -294,7 +294,7 @@ namespace Dragonfly.Umbraco7Helpers
         {
             get
             {
-                return this.lazyWriterName.Value;
+                return this._lazyWriterName.Value;
             }
         }
 
@@ -305,7 +305,7 @@ namespace Dragonfly.Umbraco7Helpers
         {
             get
             {
-                return this.inner.Published == false;
+                return this._inner.Published == false;
             }
         }
 
@@ -316,10 +316,10 @@ namespace Dragonfly.Umbraco7Helpers
         {
             get
             {
-                var parent = this.inner.Parent();
+                var parent = this._inner.Parent();
                 if (parent != null)
                 {
-                    return parent.ToPublishedContent(this.isPreviewing);
+                    return parent.ToPublishedContent(this._isPreviewing);
                 }
                 else
                 {
@@ -335,12 +335,12 @@ namespace Dragonfly.Umbraco7Helpers
         {
             get
             {
-                var children = this.inner.Children().ToList();
+                var children = this._inner.Children().ToList();
 
                 return
-                    children.Select(x => x.ToPublishedContent(this.isPreviewing))
-                        .Where(x => x != null)
-                        .OrderBy(x => x.SortOrder);
+                    children.Select(X => X.ToPublishedContent(this._isPreviewing))
+                        .Where(X => X != null)
+                        .OrderBy(X => X.SortOrder);
             }
         }
 
@@ -351,7 +351,7 @@ namespace Dragonfly.Umbraco7Helpers
         {
             get
             {
-                return this.properties;
+                return this._properties;
             }
         }
 
@@ -362,7 +362,7 @@ namespace Dragonfly.Umbraco7Helpers
         {
             get
             {
-                return this.contentType;
+                return this._contentType;
             }
         }
 
@@ -383,34 +383,34 @@ namespace Dragonfly.Umbraco7Helpers
         /// <summary>
         /// The map properties.
         /// </summary>
-        /// <param name="propertyTypes">
+        /// <param name="PropertyTypes">
         /// The property types.
         /// </param>
-        /// <param name="properties">
+        /// <param name="Properties">
         /// The properties.
         /// </param>
-        /// <param name="map">
+        /// <param name="Map">
         /// The map.
         /// </param>
         /// <returns>
         /// The <see cref="IEnumerable{T}"/>.
         /// </returns>
         internal static IEnumerable<IPublishedProperty> MapProperties(
-            IEnumerable<PublishedPropertyType> propertyTypes,
-            IEnumerable<Property> properties,
-            Func<PublishedPropertyType, object, IPublishedProperty> map)
+            IEnumerable<PublishedPropertyType> PropertyTypes,
+            IEnumerable<Property> Properties,
+            Func<PublishedPropertyType, object, IPublishedProperty> Map)
         {
             var propertyEditorResolver = PropertyEditorResolver.Current;
             var dataTypeService = ApplicationContext.Current.Services.DataTypeService;
 
-            return propertyTypes.Select(
-                x =>
+            return PropertyTypes.Select(
+                X =>
                 {
-                    var p = properties.SingleOrDefault(xx => xx.Alias == x.PropertyTypeAlias);
+                    var p = Properties.SingleOrDefault(Xx => Xx.Alias == X.PropertyTypeAlias);
                     var v = p == null || p.Value == null ? null : p.Value;
                     if (v != null)
                     {
-                        var e = propertyEditorResolver.GetByAlias(x.PropertyEditorAlias);
+                        var e = propertyEditorResolver.GetByAlias(X.PropertyEditorAlias);
 
                         // We are converting to string, even for database values which are integer or
                         // DateTime, which is not optimum. Doing differently would require that we have a way to tell
@@ -428,7 +428,7 @@ namespace Dragonfly.Umbraco7Helpers
                         }
                     }
 
-                    return map(x, v);
+                    return Map(X, v);
                 });
         }
     }
@@ -454,35 +454,35 @@ namespace Dragonfly.Umbraco7Helpers
         /// <summary>
         /// Gets the default url segment for a specified content.
         /// </summary>
-        /// <param name="content">
+        /// <param name="Content">
         /// The content.
         /// </param>
         /// <returns>
         /// The url segment.
         /// </returns>
-        public static string GetUrlSegment(this IContentBase content)
+        public static string GetUrlSegment(this IContentBase Content)
         {
-            var url = UrlSegmentProviders.Select(p => p.GetUrlSegment(content)).First(u => u != null);
-            url = url ?? new DefaultUrlSegmentProvider().GetUrlSegment(content); // be safe
+            var url = UrlSegmentProviders.Select(P => P.GetUrlSegment(Content)).First(U => U != null);
+            url = url ?? new DefaultUrlSegmentProvider().GetUrlSegment(Content); // be safe
             return url;
         }
 
         /// <summary>
         /// Gets the url segment for a specified content and culture.
         /// </summary>
-        /// <param name="content">
+        /// <param name="Content">
         /// The content.
         /// </param>
-        /// <param name="culture">
+        /// <param name="Culture">
         /// The culture.
         /// </param>
         /// <returns>
         /// The url segment.
         /// </returns>
-        public static string GetUrlSegment(this IContentBase content, CultureInfo culture)
+        public static string GetUrlSegment(this IContentBase Content, CultureInfo Culture)
         {
-            var url = UrlSegmentProviders.Select(p => p.GetUrlSegment(content, culture)).First(u => u != null);
-            url = url ?? new DefaultUrlSegmentProvider().GetUrlSegment(content, culture); // be safe
+            var url = UrlSegmentProviders.Select(P => P.GetUrlSegment(Content, Culture)).First(U => U != null);
+            url = url ?? new DefaultUrlSegmentProvider().GetUrlSegment(Content, Culture); // be safe
             return url;
         }
     }
@@ -491,27 +491,27 @@ namespace Dragonfly.Umbraco7Helpers
     [XmlType(Namespace = "http://umbraco.org/webservices/")]
     internal class PublishedProperty : PublishedPropertyBase
     {
-        private readonly object dataValue;
+        private readonly object _dataValue;
 
-        private readonly bool isPreviewing;
+        private readonly bool _isPreviewing;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PublishedProperty"/> class.
         /// </summary>
-        /// <param name="propertyType">
+        /// <param name="PropertyType">
         /// The property type.
         /// </param>
-        /// <param name="dataValue">
+        /// <param name="DataValue">
         /// The data value.
         /// </param>
-        /// <param name="isPreviewing">
+        /// <param name="IsPreviewing">
         /// The is previewing.
         /// </param>
-        public PublishedProperty(PublishedPropertyType propertyType, object dataValue, bool isPreviewing)
-            : base(propertyType)
+        public PublishedProperty(PublishedPropertyType PropertyType, object DataValue, bool IsPreviewing)
+            : base(PropertyType)
         {
-            this.dataValue = dataValue;
-            this.isPreviewing = isPreviewing;
+            this._dataValue = DataValue;
+            this._isPreviewing = IsPreviewing;
         }
 
         /// <summary>
@@ -521,9 +521,9 @@ namespace Dragonfly.Umbraco7Helpers
         {
             get
             {
-                return this.dataValue != null
-                       && ((this.dataValue is string) == false
-                           || string.IsNullOrWhiteSpace((string)this.dataValue) == false);
+                return this._dataValue != null
+                       && ((this._dataValue is string) == false
+                           || string.IsNullOrWhiteSpace((string)this._dataValue) == false);
             }
         }
 
@@ -534,7 +534,7 @@ namespace Dragonfly.Umbraco7Helpers
         {
             get
             {
-                return this.dataValue;
+                return this._dataValue;
             }
         }
 
@@ -545,8 +545,8 @@ namespace Dragonfly.Umbraco7Helpers
         {
             get
             {
-                var source = this.PropertyType.ConvertDataToSource(this.dataValue, this.isPreviewing);
-                return this.PropertyType.ConvertSourceToObject(source, this.isPreviewing);
+                var source = this.PropertyType.ConvertDataToSource(this._dataValue, this._isPreviewing);
+                return this.PropertyType.ConvertSourceToObject(source, this._isPreviewing);
             }
         }
 
@@ -557,8 +557,8 @@ namespace Dragonfly.Umbraco7Helpers
         {
             get
             {
-                var source = this.PropertyType.ConvertDataToSource(this.dataValue, this.isPreviewing);
-                return this.PropertyType.ConvertSourceToXPath(source, this.isPreviewing);
+                var source = this.PropertyType.ConvertDataToSource(this._dataValue, this._isPreviewing);
+                return this.PropertyType.ConvertSourceToXPath(source, this._isPreviewing);
             }
         }
     }
@@ -573,17 +573,17 @@ namespace Dragonfly.Umbraco7Helpers
         /// <summary>
         /// Initializes a new instance of the <see cref="PublishedPropertyBase"/> class.
         /// </summary>
-        /// <param name="propertyType">
+        /// <param name="PropertyType">
         /// The property type.
         /// </param>
-        protected PublishedPropertyBase(PublishedPropertyType propertyType)
+        protected PublishedPropertyBase(PublishedPropertyType PropertyType)
         {
-            if (propertyType == null)
+            if (PropertyType == null)
             {
-                throw new ArgumentNullException("propertyType");
+                throw new ArgumentNullException("PropertyType");
             }
 
-            this.PropertyType = propertyType;
+            this.PropertyType = PropertyType;
         }
 
         /// <summary>
