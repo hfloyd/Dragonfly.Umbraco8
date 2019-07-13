@@ -4,6 +4,7 @@
     using System.Linq;
     using Umbraco.Core;
     using Umbraco.Core.Models;
+    using Umbraco.Core.Composing;
 
     public static class Relations
     {
@@ -18,7 +19,7 @@
         /// <returns></returns>
         public static IEnumerable<int> GetDistinctRelatedNodeIds(int LookupNodeId, string RelationAlias = "")
         {
-            var relationsService = ApplicationContext.Current.Services.RelationService;
+            var relationsService = Current.Services.RelationService;
             var collectedIds = new List<int>();
 
             IEnumerable<IRelation> relations = null;

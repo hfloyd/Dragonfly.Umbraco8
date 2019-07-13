@@ -4,18 +4,20 @@
     using System.Collections.Generic;
     using System.Linq;
     using Umbraco.Core;
+    using Umbraco.Core.Composing;
     using Umbraco.Core.Logging;
     using Umbraco.Core.Models;
     using Umbraco.Core.Models.PublishedContent;
     using Umbraco.Core.Services;
-    
+    using Umbraco.Web;
+
     public static class Development
     {
         private const string ThisClassName = "Dragonfly.UmbracoHelpers.Development";
 
-        private static IFileService _umbFileService = ApplicationContext.Current.Services.FileService;
-        private static IContentService _umbContentService = ApplicationContext.Current.Services.ContentService;
-        private static IMediaService _umbMediaService = ApplicationContext.Current.Services.MediaService;
+        private static IFileService _umbFileService = Current.Services.FileService;
+        private static IContentService _umbContentService = Current.Services.ContentService;
+        private static IMediaService _umbMediaService = Current.Services.MediaService;
 
         /// <summary>
         /// Get the Alias of a template from its ID. If the Id is null or zero, "NONE" will be returned.
@@ -45,61 +47,90 @@
         }
 
         /// <summary>
-        /// Lookup a descendant page in the site by its DocType
+        /// Return the first descendant page in the site by its DocType
         /// </summary>
         /// <param name="SiteRootNodeId">ex: model.Site.Id</param>
         /// <param name="DoctypeAlias">Name of the Doctype to serach for</param>
-        /// <param name="SiteRootDocTypeAlias">default="Homepage"</param>
         /// <returns>An IPublishedContent of the node, or NULL if not found. You can then cast to a strongly-typed model for the DocType (ex: new ContactUsPage(contactPage))</returns>
-        public static IPublishedContent GetSitePage(int SiteRootNodeId, string DoctypeAlias, string SiteRootDocTypeAlias = "Homepage")
+        public static IPublishedContent GetSitePage(UmbracoHelper UmbHelper, int SiteRootNodeId, string DoctypeAlias)
         {
-            var umbracoHelper = new UmbracoHelper(UmbracoContext.Current);
+            //var xPathExpr = $"root/{SiteRootDocTypeAlias}[@id={SiteRootNodeId}]//{DoctypeAlias}";
+            //var page = UmbHelper.ContentSingleAtXPath(xPathExpr);
 
-            var xPathExpr = String.Format("root/{0}[@id={1}]//{2}", SiteRootDocTypeAlias, SiteRootNodeId, DoctypeAlias);
+            var pageMatches = GetSitePages(UmbHelper, SiteRootNodeId, DoctypeAlias).ToList();
+            if (pageMatches.Any())
+            {
+                return pageMatches.First();
+            }
 
-            var page = umbracoHelper.ContentSingleAtXPath(xPathExpr);
-            if (page.Id > 0)
-            {
-                return page as IPublishedContent;
-            }
-            else
-            {
-                return null;
-            }
+            //If we get here, node not found
+            return null;
         }
 
         /// <summary>
-        /// Return a list of Prevalues for a given DataType by Name
+        /// Returns all descendant pages in the site of a specified DocType
         /// </summary>
-        /// <param name="DataTypeName"></param>
-        /// <returns></returns>
-        public static IEnumerable<PreValue> GetPrevaluesForDataType(string DataTypeName)
+        /// <param name="SiteRootNodeId">ex: model.Site.Id</param>
+        /// <param name="DoctypeAlias">Name of the Doctype to serach for</param>
+        /// <returns>An IEnumerable&lt;IPublishedContent&gt; of the nodes, or empty list if not found.</returns>
+        public static IEnumerable<IPublishedContent> GetSitePages(UmbracoHelper UmbHelper, int SiteRootNodeId, string DoctypeAlias)
         {
-            IEnumerable<PreValue> toReturn = new List<PreValue>();
+            //var xPathExpr = $"root/{SiteRootDocTypeAlias}[@id={SiteRootNodeId}]//{DoctypeAlias}";
+            //var page = UmbHelper.ContentSingleAtXPath(xPathExpr);
 
-            IDataTypeDefinition dataType = ApplicationContext.Current.Services.DataTypeService.GetDataTypeDefinitionByName(DataTypeName);
-
-            if (dataType == null)
+            var site = UmbHelper.Content(SiteRootNodeId);
+            if (site != null)
             {
-                return toReturn;
+                var pageMatches = site.Descendants().Where(n => n.ContentType.Alias == DoctypeAlias).ToList();
+                if (pageMatches.Any())
+                {
+                    return pageMatches;
+                }
             }
 
-            PreValueCollection preValues = ApplicationContext.Current.Services.DataTypeService.GetPreValuesCollectionByDataTypeId(dataType.Id);
-
-            if (preValues == null)
-            {
-                return toReturn;
-            }
-
-            IDictionary<string, PreValue> tempDictionary = preValues.FormatAsDictionary();
-
-            toReturn = tempDictionary.Select(N => N.Value);
-
-            return toReturn;
+            //If we get here, nodes not found
+            return new List<IPublishedContent>();
         }
+
+
+        ///// <summary>
+        ///// Return a list of Prevalues for a given DataType by Name
+        ///// </summary>
+        ///// <param name="DataTypeName"></param>
+        ///// <returns></returns>
+        //public static IEnumerable<PreValue> GetPrevaluesForDataType(string DataTypeName)
+        //{
+        //    IEnumerable<PreValue> toReturn = new List<PreValue>();
+
+        //    IDataTypeDefinition dataType = Current.Services.DataTypeService.GetDataTypeDefinitionByName(DataTypeName);
+
+        //    if (dataType == null)
+        //    {
+        //        return toReturn;
+        //    }
+
+        //    PreValueCollection preValues = Current.Services.DataTypeService.GetPreValuesCollectionByDataTypeId(dataType.Id);
+
+        //    if (preValues == null)
+        //    {
+        //        return toReturn;
+        //    }
+
+        //    IDictionary<string, PreValue> tempDictionary = preValues.FormatAsDictionary();
+
+        //    toReturn = tempDictionary.Select(N => N.Value);
+
+        //    return toReturn;
+        //}
 
         #region Node Paths
 
+        /// <summary>
+        /// Return a string representation of the path to the Node
+        /// </summary>
+        /// <param name="UmbContentNode">Node to Get a Path for</param>
+        /// <param name="Separator">String to separate parts of the path</param>
+        /// <returns></returns>
         public static string NodePath(IPublishedContent UmbContentNode, string Separator = " » ")
         {
             string nodePathString = String.Empty;
@@ -111,22 +142,22 @@
             }
             catch (Exception ex)
             {
-                var functionName = String.Format("{0}.NodePath", ThisClassName);
-                var errMsg = String.Format(
-                    "ERROR in {0} for node #{1} ({2}). [{3}]",
-                    functionName,
-                    UmbContentNode.Id.ToString(),
-                    UmbContentNode.Name,
-                    ex.Message);
-                LogHelper.Error<string>(errMsg, ex);
+                var functionName = $"{ThisClassName}.NodePath";
+                Current.Logger.Error<string>(ex, "ERROR in {FunctionName} for node #{NodeId} ({NodeName}).", functionName, UmbContentNode.Id.ToString(), UmbContentNode.Name);
 
-                var returnMsg = String.Format("Unable to generate node path. (ERROR:{0})", ex.Message);
+                var returnMsg = $"Unable to generate node path. (ERROR:{ex.Message})";
                 return returnMsg;
             }
 
             return nodePathString;
         }
 
+        /// <summary>
+        /// Return a string representation of the path to the Node
+        /// </summary>
+        /// <param name="UmbContentNode">Node to Get a Path for</param>
+        /// <param name="Separator">String to separate parts of the path</param>
+        /// <returns></returns>
         public static string NodePath(IContent UmbContentNode, string Separator = " » ")
         {
             string nodePathString = String.Empty;
@@ -138,22 +169,22 @@
             }
             catch (Exception ex)
             {
-                var functionName = String.Format("{0}.NodePath", ThisClassName);
-                var errMsg = String.Format(
-                    "ERROR in {0} for node #{1} ({2}). [{3}]",
-                    functionName,
-                    UmbContentNode.Id.ToString(),
-                    UmbContentNode.Name,
-                    ex.Message);
-                LogHelper.Error<string>(errMsg, ex);
+                var functionName = $"{ThisClassName}.NodePath";
+                Current.Logger.Error<string>(ex, "ERROR in {FunctionName} for node #{NodeId} ({NodeName}).", functionName, UmbContentNode.Id.ToString(), UmbContentNode.Name);
 
-                var returnMsg = String.Format("Unable to generate node path. (ERROR:{0})", ex.Message);
+                var returnMsg = $"Unable to generate node path. (ERROR:{ex.Message})";
                 return returnMsg;
             }
 
             return nodePathString;
         }
 
+        /// <summary>
+        /// Return a string representation of the path to the Node
+        /// </summary>
+        /// <param name="PathIdsCsv">Comma-separated list of NodeIds representing the Path</param>
+        /// <param name="Separator">String to separate parts of the path</param>
+        /// <returns></returns>
         private static string NodePathFromPathIdsCsv(string PathIdsCsv, string Separator = " » ")
         {
             string nodePathString = String.Empty;
@@ -174,9 +205,14 @@
 
         }
 
+        /// <summary>
+        /// Return a string representation of the path to the Node
+        /// </summary>
+        /// <param name="UmbMediaNode">Node to Get a Path for</param>
+        /// <param name="Separator">String to separate parts of the path</param>
+        /// <returns></returns>
         public static string MediaPath(IPublishedContent UmbMediaNode, string Separator = " » ")
         {
-
             string nodePathString = String.Empty;
 
             try
@@ -187,21 +223,21 @@
             catch (Exception ex)
             {
                 var functionName = String.Format("{0}.NodePath", ThisClassName);
-                var errMsg = String.Format(
-                    "ERROR in {0} for node #{1} ({2}). [{3}]",
-                    functionName,
-                    UmbMediaNode.Id.ToString(),
-                    UmbMediaNode.Name,
-                    ex.Message);
-                LogHelper.Error<string>(errMsg, ex);
+                Current.Logger.Error<string>(ex, "ERROR in {FunctionName} for node #{MediaNodeId} ({MediaNodeName}).", functionName, UmbMediaNode.Id.ToString(), UmbMediaNode.Name);
 
-                var returnMsg = String.Format("Unable to generate node path. (ERROR:{0})", ex.Message);
+                var returnMsg = $"Unable to generate node path. (ERROR:{ex.Message})";
                 return returnMsg;
             }
 
             return nodePathString;
         }
 
+        /// <summary>
+        /// Return a string representation of the path to the Node
+        /// </summary>
+        /// <param name="PathIdsCsv">Comma-separated list of NodeIds representing the Path</param>
+        /// <param name="Separator">String to separate parts of the path</param>
+        /// <returns></returns>
         private static string MediaNodePathFromPathIdsCsv(string PathIdsCsv, string Separator = " » ")
         {
             string nodePathString = String.Empty;
@@ -241,8 +277,8 @@
                 {
                     if (publishedContent != null)
                     {
-                       var udi = ToUdiString(publishedContent, UdiType);
-                       list.Add(udi.ToString());
+                        var udi = ToUdiString(publishedContent, UdiType);
+                        list.Add(udi.ToString());
                     }
                 }
             }
@@ -252,16 +288,16 @@
         /// <summary>
         /// Converts an IPublishedContent to a UDI string suitable for using with the content service
         /// </summary>
-        /// <param name="Pub">IPublishedContent</param>
+        /// <param name="Pub">Node to use</param>
         /// <param name="UdiType">UDI Type to use (document, media, etc) (use 'Umbraco.Core.Constants.UdiEntityType.' to specify)
         /// If excluded, will try to use the DocTypeAlias to determine the UDI Type</param>
         /// <returns></returns>
-        public static string ToUdiString(this IPublishedContent Pub, string UdiType="")
+        public static string ToUdiString(this IPublishedContent PublishedContent, string UdiType = "")
         {
-            if (Pub != null)
+            if (PublishedContent != null)
             {
-                var udiType = UdiType != ""? UdiType : GetUdiType(Pub);
-                var udi = Umbraco.Core.Udi.Create(udiType, Pub.GetKey());
+                var udiType = UdiType != "" ? UdiType : GetUdiType(PublishedContent);
+                var udi = Udi.Create(udiType, PublishedContent.Key);
                 return udi.ToString();
             }
             else
@@ -270,23 +306,22 @@
             }
         }
 
+        /// <summary>
+        /// Returns a string representation of the type for the Udi (ex: 'media' or 'document')
+        /// </summary>
+        /// <param name="PublishedContent">Node to get data for</param>
+        /// <returns></returns>
         private static string GetUdiType(IPublishedContent PublishedContent)
         {
             var udiType = Umbraco.Core.Constants.UdiEntityType.Document;
 
-            //if it's a known (default) media or member type, use that, otherwise, document is assumed
-            switch (PublishedContent.DocumentTypeAlias)
+            //if it's a media or member type, use that, otherwise, document is assumed
+            switch (PublishedContent.ItemType)
             {
-                case Constants.Conventions.MediaTypes.Image:
+                case PublishedItemType.Media:
                     udiType = Umbraco.Core.Constants.UdiEntityType.Media;
                     break;
-                case Constants.Conventions.MediaTypes.File:
-                    udiType = Umbraco.Core.Constants.UdiEntityType.Media;
-                    break;
-                case Constants.Conventions.MediaTypes.Folder:
-                    udiType = Umbraco.Core.Constants.UdiEntityType.Media;
-                    break;
-                case Constants.Conventions.MemberTypes.DefaultAlias:
+                case PublishedItemType.Member:
                     udiType = Umbraco.Core.Constants.UdiEntityType.Member;
                     break;
             }

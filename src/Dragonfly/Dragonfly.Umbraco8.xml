@@ -246,6 +246,98 @@
             The <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/> from the content picker.
             </returns>
         </member>
+        <member name="M:Dragonfly.UmbracoHelpers.Development.GetTemplateAlias(System.Nullable{System.Int32})">
+            <summary>
+            Get the Alias of a template from its ID. If the Id is null or zero, "NONE" will be returned.
+            </summary>
+            <param name="TemplateId">
+            The template id.
+            </param>
+            <returns>
+            The <see cref="T:System.String"/>.
+            </returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.Development.GetSitePage(Umbraco.Web.UmbracoHelper,System.Int32,System.String)">
+            <summary>
+            Return the first descendant page in the site by its DocType
+            </summary>
+            <param name="SiteRootNodeId">ex: model.Site.Id</param>
+            <param name="DoctypeAlias">Name of the Doctype to serach for</param>
+            <returns>An IPublishedContent of the node, or NULL if not found. You can then cast to a strongly-typed model for the DocType (ex: new ContactUsPage(contactPage))</returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.Development.GetSitePages(Umbraco.Web.UmbracoHelper,System.Int32,System.String)">
+            <summary>
+            Returns all descendant pages in the site of a specified DocType
+            </summary>
+            <param name="SiteRootNodeId">ex: model.Site.Id</param>
+            <param name="DoctypeAlias">Name of the Doctype to serach for</param>
+            <returns>An IEnumerable&lt;IPublishedContent&gt; of the nodes, or empty list if not found.</returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.Development.NodePath(Umbraco.Core.Models.PublishedContent.IPublishedContent,System.String)">
+            <summary>
+            Return a string representation of the path to the Node
+            </summary>
+            <param name="UmbContentNode">Node to Get a Path for</param>
+            <param name="Separator">String to separate parts of the path</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.Development.NodePath(Umbraco.Core.Models.IContent,System.String)">
+            <summary>
+            Return a string representation of the path to the Node
+            </summary>
+            <param name="UmbContentNode">Node to Get a Path for</param>
+            <param name="Separator">String to separate parts of the path</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.Development.NodePathFromPathIdsCsv(System.String,System.String)">
+            <summary>
+            Return a string representation of the path to the Node
+            </summary>
+            <param name="PathIdsCsv">Comma-separated list of NodeIds representing the Path</param>
+            <param name="Separator">String to separate parts of the path</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.Development.MediaPath(Umbraco.Core.Models.PublishedContent.IPublishedContent,System.String)">
+            <summary>
+            Return a string representation of the path to the Node
+            </summary>
+            <param name="UmbMediaNode">Node to Get a Path for</param>
+            <param name="Separator">String to separate parts of the path</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.Development.MediaNodePathFromPathIdsCsv(System.String,System.String)">
+            <summary>
+            Return a string representation of the path to the Node
+            </summary>
+            <param name="PathIdsCsv">Comma-separated list of NodeIds representing the Path</param>
+            <param name="Separator">String to separate parts of the path</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.Development.ToUdiCsv(System.Collections.Generic.IEnumerable{Umbraco.Core.Models.PublishedContent.IPublishedContent},System.String)">
+            <summary>
+            Converts a list of published content to a comma-separated string of UDI values suitable for using with the content service
+            </summary>
+            <param name="PubsEnum">A collection of IPublishedContent</param>
+            <param name="UdiType">UDI Type to use (document, media, etc) (use 'Umbraco.Core.Constants.UdiEntityType.' to specify)
+            If excluded, will try to use the DocTypeAlias to determine the UDI Type</param>
+            <returns>A CSV string of UID values eg. umb://document/56c0f0ef0ac74b58ae1cce16db1476af,umb://document/5cbac9249ffa4f5ab4f5e0db1599a75b</returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.Development.ToUdiString(Umbraco.Core.Models.PublishedContent.IPublishedContent,System.String)">
+            <summary>
+            Converts an IPublishedContent to a UDI string suitable for using with the content service
+            </summary>
+            <param name="Pub">Node to use</param>
+            <param name="UdiType">UDI Type to use (document, media, etc) (use 'Umbraco.Core.Constants.UdiEntityType.' to specify)
+            If excluded, will try to use the DocTypeAlias to determine the UDI Type</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.Development.GetUdiType(Umbraco.Core.Models.PublishedContent.IPublishedContent)">
+            <summary>
+            Returns a string representation of the type for the Udi (ex: 'media' or 'document')
+            </summary>
+            <param name="PublishedContent">Node to get data for</param>
+            <returns></returns>
+        </member>
         <member name="M:Dragonfly.UmbracoHelpers.Dictionary.GetDictionaryOrPlaceholder(Umbraco.Web.UmbracoHelper,System.String,System.String)">
             <summary>
             Return a dictionary value or a placeholder representing the dictionary value which needs to be added
@@ -254,6 +346,54 @@
             <param name="DictionaryKey">The dictionary key to lookup</param>
             <param name="DefaultValue">A default value to return instead of the placeholder if the key is not found (optional)</param>
             <returns>Either the display text, or a placeholder surrounded by [square brackets]</returns>
+        </member>
+        <member name="T:Dragonfly.UmbracoHelpers.Email">
+            <summary>
+            EmailMessage Helpers
+            </summary>
+        </member>
+        <member name="T:Dragonfly.UmbracoHelpers.Email.MailVariables">
+            <summary>
+            Data structure for storing mail related items
+            </summary>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.Email.GetMailVariables(System.Int32)">
+            <summary>
+            Gets mail variables from EmailMessage document type
+            </summary>
+            <param name="NodeId">
+            The node id of the EmailMessage
+            </param>
+            <returns>
+            The <see cref="T:Dragonfly.UmbracoHelpers.Email.MailVariables"/>.
+            </returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.Email.TrySendMail(Dragonfly.UmbracoHelpers.Email.MailVariables)">
+            <summary>
+            Attempts to send an email with mail variable package passed-in
+            </summary>
+            <param name="Package">
+            The The <see cref="T:Dragonfly.UmbracoHelpers.Email.MailVariables"/> package.
+            </param>
+            <returns>
+            <see cref="T:System.Boolean"/> indicating successful send.
+            </returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.Email.ReplacePlaceholders(System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.String,System.Boolean)">
+            <summary>
+            Using a dictionary of replacement keys with their corresponding values,
+            replace the placeholders in the Template content. 
+            </summary>
+            <param name="TemplateContent">The email template content to process.</param>
+            <param name="PlaceholdersData">The placeholder data Dictionary</param>
+            <param name="TemplatePattern">The format pattern to indicate placeholders in the template content</param>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.Email.AddImgAbsolutePath(System.String)">
+            <summary>
+            Add an absolute path to all the img tags in the html of an e-mail.
+            </summary>
+            <param name="Html"></param>
+            <returns></returns>
         </member>
         <member name="M:Dragonfly.UmbracoHelpers.Macros.GetSafeParamObject(System.Collections.Generic.IDictionary{System.String,System.Object},System.String,System.Object)">
             <summary>
@@ -343,6 +483,178 @@
             <param name="Response"></param>
             <param name="Url"></param>
             <returns></returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.Relations.GetDistinctRelatedNodeIds(System.Int32,System.String)">
+            <summary>
+            Get a list of related node Ids with duplicates removed (esp. for a bi-directional relation)
+            </summary>
+            <param name="LookupNodeId">Id of node to get relations for</param>
+            <param name="RelationAlias">If blank will check all relations</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoModels.DataTypes.MntpExtensions.GetSafeMntpContent(Umbraco.Core.Models.PublishedContent.IPublishedContent,Umbraco.Web.UmbracoHelper,System.String,System.Boolean)">
+            <summary>
+            Creates a collection of <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/> of either content or media based on values saved by an Umbraco MultiNodeTree Picker DataType
+            </summary>
+            <param name="Content">
+            The <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/>
+            </param>
+            <param name="umbraco">
+            The <see cref="T:Umbraco.Web.UmbracoHelper"/>
+            </param>
+            <param name="UmbHelper"></param>
+            <param name="PropertyAlias">
+            The Umbraco property Alias.
+            </param>
+            <param name="IsMedia">
+            True or false indicating whether or not the property is an Umbraco media item
+            </param>
+            <returns>
+            The collection of <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/>.
+            </returns>
+        </member>
+        <member name="T:Dragonfly.UmbracoModels.Helpers.LinkHelper">
+            <summary>
+            Represents the link helper
+            </summary>
+        </member>
+        <member name="F:Dragonfly.UmbracoModels.Helpers.LinkHelper.NavDisplayNameProperties">
+            <summary>
+            Property aliases to use for the Nav Display Name (in ascending order of Priority)
+            </summary>
+        </member>
+        <member name="T:Dragonfly.UmbracoModels.Helpers.LinkHelper.ChangedLinkTierEventHandler">
+            <summary>
+            The changed link tier event handler.
+            </summary>
+            <param name="sender">
+            The sender.
+            </param>
+            <param name="arg">
+            The arg.
+            </param>
+        </member>
+        <member name="E:Dragonfly.UmbracoModels.Helpers.LinkHelper.AddingTier">
+            <summary>
+            The adding tier.
+            </summary>
+        </member>
+        <member name="M:Dragonfly.UmbracoModels.Helpers.LinkHelper.BuildLinkTier(Umbraco.Core.Models.PublishedContent.IPublishedContent,Umbraco.Core.Models.PublishedContent.IPublishedContent,System.String[],System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Builds a <see cref="T:Dragonfly.UmbracoModels.ILinkTier"/> (Set the "NavDisplayNameProperties" property on the LinkHelper before calling)
+            </summary>
+            <param name="TierContentItem">The <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/> "tier" item (the parent tier)</param>
+            <param name="CurrentContent">The CurrentContent <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/> in the recursion</param>
+            <param name="ExcludeDocumentTypes">A collection of document type aliases to exclude</param>
+            <param name="TierLevel">The starting "tier" level. Note this is the Umbraco node level</param>
+            <param name="MaxLevel">The max "tier" level. Note this is the Umbraco node level</param>
+            <param name="IncludeContentWithoutTemplate">True or false indicating whether or not to include content that does not have an associated template</param>
+            <returns>the <see cref="T:Dragonfly.UmbracoModels.ILinkTier"/></returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoModels.Helpers.LinkHelper.BuildBreadCrumb(System.Int32,Umbraco.Core.Models.PublishedContent.IPublishedContent)">
+            <summary>
+            Constructs a breadcrumb menu  (Set the "NavDisplayNameProperties" property on the LinkHelper before calling)
+            </summary>
+            <param name="StopLevel">The "top" level at which the recursion should quit</param>
+            <param name="CurrentContent">The CurrentContent content</param>
+            <returns>List of <see cref="T:Dragonfly.UmbracoModels.Link" /></returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoModels.Helpers.LinkHelper.BuildBreadCrumb(Umbraco.Core.Models.PublishedContent.IPublishedContent,System.String,System.Int32,System.Int32)">
+            <summary>
+            Constructs a breadcrumb menu  (Set the 'NavDisplayNameProperties' property on the LinkHelper before calling)
+            </summary>
+            <param name="CurrentContent">The content for which the breadcrumbs will be created</param>
+            <param name="LinkTextProperty">Property to retrieve Text for the link. If the property doesn't exist or is blank, it will revert to using data in the 'NavDisplayNameProperties' property</param>
+            <param name="MinLevel">The "top" level at which the recursion should quit (default = 1 : site root)</param>
+            <param name="MaxLevel">The "bottom" level of parent pages which will be included in the menu (default = 0 : no limit, will include the current page)</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoModels.Helpers.LinkHelper.ContentNodeToLink(Umbraco.Core.Models.PublishedContent.IPublishedContent,System.Boolean,System.String)">
+            <summary>
+            Converts a Content Node to an ILink (Set the 'NavDisplayNameProperties' property on the LinkHelper before calling)
+            </summary>
+            <param name="ContentNode"></param>
+            <param name="IsMedia"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoModels.Helpers.LinkHelper.GetNavDisplayName(Umbraco.Core.Models.PublishedContent.IPublishedContent)">
+            <summary>
+            Uses the values in the 'NavDisplayNameProperties' property to select the best name for the nav display
+            </summary>
+            <param name="Content"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoModels.Helpers.LinkHelper.ContentHasTemplate(Umbraco.Core.Models.PublishedContent.IPublishedContent)">
+            <summary>
+            Quick fix to all for checking if a content item has a template
+            </summary>
+            <param name="content">The <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/></param>
+            <returns>True or false indicating whether or not the content has an associated template selected</returns>
+        </member>
+        <member name="T:Dragonfly.UmbracoModels.Helpers.AddingLinkTierEventArgs">
+            <summary>
+            The link tier event args.
+            </summary>
+        </member>
+        <member name="M:Dragonfly.UmbracoModels.Helpers.AddingLinkTierEventArgs.#ctor(Dragonfly.UmbracoModels.ILinkTier,Dragonfly.UmbracoModels.ILinkTier)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Dragonfly.UmbracoModels.Helpers.AddingLinkTierEventArgs"/> class.
+            </summary>
+            <param name="root">
+            The root (base link tier)
+            </param>
+            <param name="adding">
+            The modified value - generally an addition or 
+            </param>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.Helpers.AddingLinkTierEventArgs.Root">
+            <summary>
+            Gets or sets the root link tier.
+            </summary>
+        </member>
+        <member name="P:Dragonfly.UmbracoModels.Helpers.AddingLinkTierEventArgs.Adding">
+            <summary>
+            Gets or sets the adding.
+            </summary>
+        </member>
+        <member name="M:Dragonfly.UmbracoModels.Helpers.MediaHelper.PropertyValueToSafeImage(System.Object,Umbraco.Web.UmbracoHelper,Dragonfly.UmbracoModels.IMediaImage)">
+            <summary>
+            Checks if the model has a property and a value for the property and returns either the <see cref="!:IImage"/> representation
+            of the property or the default <see cref="T:Dragonfly.UmbracoModels.IMediaImage"/>
+            </summary>
+            <param name="PropValue">
+            The Property Value
+            </param>
+            <param name="Umbraco">
+            The <see cref="T:Umbraco.Web.UmbracoHelper"/>
+            </param>
+            <param name="DefaultImage">
+            The default image.
+            </param>
+            <returns>
+            The <see cref="T:Dragonfly.UmbracoModels.IMediaImage"/>.
+            </returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoModels.Helpers.MediaHelper.GetMediaImages(Umbraco.Core.Models.PublishedContent.IPublishedContent,Umbraco.Web.UmbracoHelper,System.String)">
+            <summary>
+            Checks if the model has a property and a value for the property and returns either the <see cref="T:Dragonfly.UmbracoModels.IMediaImage"/> representation
+            of the property or the default <see cref="T:Dragonfly.UmbracoModels.IMediaImage"/>s
+            </summary>
+            <param name="content">
+            The content which has the media picker property
+            </param>
+            <param name="umbraco">
+            The <see cref="T:Umbraco.Web.UmbracoHelper"/>
+            </param>
+            <param name="propertyAlias">
+            The property alias of the media picker
+            </param>
+            <param name="defaultImage">
+            A default image to return if there are no results
+            </param>
+            <returns>
+            A collection of <see cref="T:Dragonfly.UmbracoModels.IMediaImage"/>.
+            </returns>
         </member>
         <!-- Badly formed XML comment ignored for member "M:Dragonfly.UmbracoModels.MediaExtensions.ToMediaFile(Umbraco.Core.Models.PublishedContent.IPublishedContent)" -->
         <member name="M:Dragonfly.UmbracoModels.MediaExtensions.ToMediaFiles(System.Collections.Generic.IEnumerable{Umbraco.Core.Models.PublishedContent.IPublishedContent})">
@@ -837,6 +1149,70 @@
             <summary>
             Gets or sets the children <see cref="T:Dragonfly.UmbracoModels.ILinkTier"/>
             </summary>
+        </member>
+        <member name="M:Dragonfly.Umbraco7Services.MediaFinderService.#ctor(Umbraco.Web.UmbracoHelper)">
+            <summary>
+            Service to retrieve Media Nodes via various search methods
+            </summary>
+            <param name="umbHelper">UmbracoHelper passed-in</param>
+        </member>
+        <member name="M:Dragonfly.Umbraco7Services.MediaFinderService.GetImageByName(System.String,System.Int32)">
+            <summary>
+            Lookup Media Image by Node Name
+            </summary>
+            <param name="ImageMediaName">Name to search for</param>
+            <param name="StartNodeId">ID of MediaNode to limit search to descendants</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dragonfly.Umbraco7Services.MediaFinderService.GetFolderByName(System.String,System.Int32)">
+            <summary>
+            Lookup Media Folder by Node Name
+            </summary>
+            <param name="FolderName">Name to search for</param>
+            <param name="StartNodeId">ID of MediaNode to limit search to descendants</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dragonfly.Umbraco7Services.MediaFinderService.GetFileByName(System.String,System.Int32)">
+            <summary>
+            Lookup Media File by Node Name
+            </summary>
+            <param name="FileMediaName">Name to search for</param>
+            <param name="StartNodeId">ID of MediaNode to limit search to descendants</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dragonfly.Umbraco7Services.MediaFinderService.GetMediaByName(System.String,System.Int32,System.String)">
+            <summary>
+            Lookup Media Node by Node Name
+            </summary>
+            <param name="MediaName">Name to search for</param>
+            <param name="StartNodeId">ID of MediaNode to limit search to descendants</param>
+            <param name="MediaTypeAlias">Alias of MediaType to return</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dragonfly.Umbraco7Services.MediaFinderService.GetImageByFilePath(System.String,System.Int32)">
+            <summary>
+            Lookup Media Image by File Path
+            </summary>
+            <param name="MediaFilePath">File Path to search for</param>
+            <param name="StartNodeId">ID of MediaNode to limit search to descendants</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dragonfly.Umbraco7Services.MediaFinderService.GetFileByFilePath(System.String,System.Int32)">
+            <summary>
+            Lookup Media File by File Path
+            </summary>
+            <param name="MediaFilePath">File Path to search for</param>
+            <param name="StartNodeId">ID of MediaNode to limit search to descendants</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dragonfly.Umbraco7Services.MediaFinderService.GetMediaByFilePath(System.String,System.Int32,System.String)">
+            <summary>
+            Lookup Media Node by File Path
+            </summary>
+            <param name="MediaFilePath">File Path to search for</param>
+            <param name="StartNodeId">ID of MediaNode to limit search to descendants</param>
+            <param name="MediaTypeAlias">Alias of MediaType to return</param>
+            <returns></returns>
         </member>
     </members>
 </doc>

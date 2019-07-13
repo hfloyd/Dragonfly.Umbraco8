@@ -5,18 +5,20 @@
     using System.Linq;
     using Umbraco.Core.Models;
     using Umbraco.Core.Models.PublishedContent;
+    using Umbraco.Web;
+    using Umbraco.Core.Composing;
 
     public static class MultiNodeTreePicker
     {
         public static IEnumerable<IPublishedContent> GetMntpContent(this IPublishedContent thisContent, string PropertyAlias)
         {
-            var propData = thisContent.HasProperty(PropertyAlias) ? thisContent.GetProperty(PropertyAlias).DataValue : null;
+            var propData = thisContent.HasProperty(PropertyAlias) ? thisContent.Value(PropertyAlias): null;
 
             if (propData != null)
             {
-                var nodesArray = ConvertDataToNodeIdArray(propData);
-
-                return ConvertNodeIdsToContent(nodesArray);
+                //var nodesArray = ConvertDataToNodeIdArray(propData);
+                //return ConvertNodeIdsToContent(nodesArray);
+                return thisContent.Value<IEnumerable<IPublishedContent>>(PropertyAlias);
             }
             else
             {
@@ -24,12 +26,12 @@
             }
         }
 
-        public static IEnumerable<IPublishedContent> GetContent(object SourceData)
-        {
-            var nodesArray = ConvertDataToNodeIdArray(SourceData);
+        //public static IEnumerable<IPublishedContent> GetContent(object SourceData)
+        //{
+        //    var nodesArray = ConvertDataToNodeIdArray(SourceData);
 
-            return ConvertNodeIdsToContent(nodesArray);
-        }
+        //    return ConvertNodeIdsToContent(nodesArray);
+        //}
 
         /// <summary>
         /// Convert the raw string into a nodeId integer array
@@ -45,73 +47,70 @@
             return nodeIds;
         }
 
-        /// <summary>
-        /// Convert the source nodeId into a IEnumerable of IPublishedContent (or DynamicPublishedContent)
-        /// </summary>
-        /// <param name="propertyType">
-        /// The published property type.
-        /// </param>
-        /// <param name="Source">
-        /// The value of the property
-        /// </param>
-        /// <param name="preview">
-        /// The preview.
-        /// </param>
-        /// <returns>
-        /// The <see cref="object"/>.
-        /// </returns>
-        public static IEnumerable<IPublishedContent> ConvertNodeIdsToContent(int[] NodeIdArray)
-        {
-            // Get the data type "content" or "media" setting
-            /*
-            var dts = ApplicationContext.Current.Services.DataTypeService;
-            var startNodePreValue =
-                dts.GetPreValuesCollectionByDataTypeId(propertyType.DataTypeId)
-                    .PreValuesAsDictionary.FirstOrDefault(x => x.Key.ToLowerInvariant() == "startNode".ToLowerInvariant()).Value.Value;
+        ///// <summary>
+        ///// Convert the source nodeId into a IEnumerable of IPublishedContent (or DynamicPublishedContent)
+        ///// </summary>
+        ///// <param name="propertyType">
+        ///// The published property type.
+        ///// </param>
+        ///// <param name="Source">
+        ///// The value of the property
+        ///// </param>
+        ///// <param name="preview">
+        ///// The preview.
+        ///// </param>
+        ///// <returns>
+        ///// The <see cref="object"/>.
+        ///// </returns>
+        //public static IEnumerable<IPublishedContent> ConvertNodeIdsToContent(UmbracoHelper UmbHelper, int[] NodeIdArray)
+        //{
+        //    // Get the data type "content" or "media" setting
+        //    /*
+        //    var dts = ApplicationContext.Current.Services.DataTypeService;
+        //    var startNodePreValue =
+        //        dts.GetPreValuesCollectionByDataTypeId(propertyType.DataTypeId)
+        //            .PreValuesAsDictionary.FirstOrDefault(x => x.Key.ToLowerInvariant() == "startNode".ToLowerInvariant()).Value.Value;
 
-            var startNodeObj = JsonConvert.DeserializeObject<JObject>(startNodePreValue);
-            var pickerType = startNodeObj.GetValue("type").Value<string>();
-            */
+        //    var startNodeObj = JsonConvert.DeserializeObject<JObject>(startNodePreValue);
+        //    var pickerType = startNodeObj.GetValue("type").Value<string>();
+        //    */
 
-            if (NodeIdArray == null)
-            {
-                return null;
-            }
+        //    if (NodeIdArray == null)
+        //    {
+        //        return null;
+        //    }
 
-            var nodeIds = (int[])NodeIdArray;
+        //    var nodeIds = (int[])NodeIdArray;
 
-            var multiNodeTreePicker = new List<IPublishedContent>();
+        //    var multiNodeTreePicker = new List<IPublishedContent>();
 
-            if (UmbracoContext.Current != null)
-            {
-                var umbHelper = new UmbracoHelper(UmbracoContext.Current);
+            
+        //        if (nodeIds.Length > 0)
+        //        {
 
-                if (nodeIds.Length > 0)
-                {
+        //            var objectType = UmbracoObjectTypes.Unknown;
 
-                    var objectType = UmbracoObjectTypes.Unknown;
+        //            foreach (var nodeId in nodeIds)
+        //            {
+        //                var multiNodeTreePickerItem = UmbHelper.PublishedContent(nodeId, ref objectType, UmbracoObjectTypes.Document,)
+        //                            ?? UmbHelper.PublishedContent(nodeId, ref objectType, UmbracoObjectTypes.Media, UmbHelper.Media)
+        //                            ?? UmbHelper.PublishedContent(nodeId, ref objectType, UmbracoObjectTypes.Member, UmbHelper.Member);
 
-                    foreach (var nodeId in nodeIds)
-                    {
-                        var multiNodeTreePickerItem = GetPublishedContent(nodeId, ref objectType, UmbracoObjectTypes.Document, umbHelper.TypedContent)
-                                    ?? GetPublishedContent(nodeId, ref objectType, UmbracoObjectTypes.Media, umbHelper.TypedMedia)
-                                    ?? GetPublishedContent(nodeId, ref objectType, UmbracoObjectTypes.Member, umbHelper.TypedMember);
+        //                if (multiNodeTreePickerItem != null)
+        //                {
+        //                    multiNodeTreePicker.Add(multiNodeTreePickerItem);
+        //                }
+        //            }
 
-                        if (multiNodeTreePickerItem != null)
-                        {
-                            multiNodeTreePicker.Add(multiNodeTreePickerItem);
-                        }
-                    }
+        //        }
 
-                }
-
-                return multiNodeTreePicker.Where(x => x != null);
-            }
-            else
-            {
-                return null;
-            }
-        }
+        //        return multiNodeTreePicker.Where(x => x != null);
+        //    }
+        //    else
+        //    {
+        //        return null;
+        //    }
+        //}
 
 
         /// <summary>

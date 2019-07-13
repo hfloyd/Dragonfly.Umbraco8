@@ -12,11 +12,13 @@ namespace Dragonfly.UmbracoHelpers
 {
     using System;
     using System.Collections.Generic;
+    using System.Net.Mail;
     using System.Text;
     using System.Web;
     using HtmlAgilityPack;
     using Umbraco.Core;
     using Umbraco.Core.Logging;
+    using Umbraco.Core.Composing;
 
     /// <summary>
     /// EmailMessage Helpers
@@ -57,7 +59,7 @@ namespace Dragonfly.UmbracoHelpers
         /// </returns>
         public static MailVariables GetMailVariables(int NodeId)
         {
-            var umbContentService = ApplicationContext.Current.Services.ContentService;
+            var umbContentService = Current.Services.ContentService;
             var emf = umbContentService.GetById(NodeId);
 
             MailVariables mailvars = new MailVariables();
@@ -73,8 +75,8 @@ namespace Dragonfly.UmbracoHelpers
             }
             catch (Exception ex)
             {
-                var msg = string.Format("Error creating or MailVariables. Exception: {0}", ex.Message);
-                LogHelper.Error(typeof(Email), msg, new Exception(msg));
+                var msg = string.Format("Error creating MailVariables.", ex.Message);
+                Current.Logger.Error<MailVariables>(ex, msg);
             }
             return mailvars;
         }
@@ -106,76 +108,12 @@ namespace Dragonfly.UmbracoHelpers
             }
             catch (Exception ex)
             {
-                var msg = string.Concat("TrySendMail: ", string.Format("Error creating or sending email, exception: {0}", ex.Message));
-                LogHelper.Error(typeof(Email), msg, new Exception(msg));
+                var msg = string.Concat("TrySendMail: ", string.Format("Error creating or sending email"));
+                Current.Logger.Error<MailMessage>(ex, msg);
             }
 
             return false;
         }
-
-        ///// <summary>
-        ///// Given the set of replacement values and a list of email fields, construct and send the required emails.
-        ///// </summary>
-        ///// <param name="emailValues">The replacement values</param>
-        ///// <param name="formAliases">The node property aliases, relevant to the current node.</param>
-        //public static void ProcessForms(this UmbracoHelper umbraco, Dictionary<string, string> emailValues, IEnumerable<EmailFields> emailFieldsList, EmailType? emailType, bool addFiles = false)
-        //{
-        //    var streams = new Dictionary<string, MemoryStream>();
-
-        //    if (addFiles)
-        //    {
-        //        var files = HttpContext.Current.Request.Files;
-        //        foreach (string fileKey in files)
-        //        {
-        //            var file = files[fileKey];
-
-        //            //Only add the file if one has been selected.
-        //            if (file.ContentLength > 0)
-        //            {
-        //                file.InputStream.Position = 0;
-        //                var memoryStream = new MemoryStream();
-        //                file.InputStream.CopyTo(memoryStream);
-        //                streams.Add(file.FileName, memoryStream);
-        //            }
-        //        }
-        //    }
-
-        //    foreach (var emailFields in emailFieldsList)
-        //    {
-        //        if (emailFields.Send
-        //            && !string.IsNullOrWhiteSpace(emailFields.SenderName)
-        //            && !string.IsNullOrWhiteSpace(emailFields.SenderEmail)
-        //            && !string.IsNullOrWhiteSpace(emailFields.ReceiverEmail)
-        //            && !string.IsNullOrWhiteSpace(emailFields.Subject)
-        //            )
-        //        {
-        //            var attachments = new Dictionary<string, MemoryStream>();
-        //            foreach (var stream in streams)
-        //            {
-        //                var memoryStream = new MemoryStream();
-        //                stream.Value.Position = 0;
-        //                stream.Value.CopyTo(memoryStream);
-        //                memoryStream.Position = 0;
-        //                attachments.Add(stream.Key, memoryStream);
-        //            }
-
-        //            ReplacePlaceholders(emailFields, emailValues);
-        //            emailFields.Body = AddImgAbsolutePath(emailFields.Body);
-        //            Umbraco.SendEmail(
-        //                emailFields.SenderEmail,
-        //                emailFields.SenderName,
-        //                emailFields.ReceiverEmail,
-        //                emailFields.Subject,
-        //                emailFields.Body,
-        //                emailFields.CcEmail,
-        //                emailFields.BccEmail,
-        //                emailType: emailType,
-        //                addFiles: addFiles,
-        //                attachments: attachments
-        //                );
-        //        }
-        //    }
-        //}
 
         /// <summary>
         /// Using a dictionary of replacement keys with their corresponding values,

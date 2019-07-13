@@ -12,7 +12,6 @@ namespace Dragonfly.UmbracoHelpers
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
     using System.Xml.Serialization;
@@ -20,9 +19,10 @@ namespace Dragonfly.UmbracoHelpers
     using Umbraco.Core;
     using Umbraco.Core.Models;
     using Umbraco.Core.Models.PublishedContent;
-    using Umbraco.Core.PropertyEditors;
     using Umbraco.Core.Strings;
-    
+    using Umbraco.Web.Models;
+
+
     public static class IContentExtensions
     {
 
@@ -40,15 +40,14 @@ namespace Dragonfly.UmbracoHelpers
         /// </returns>
         public static IPublishedContent ToPublishedContent(this IContent Content, bool IsPreview = false)
         {
-            return new PublishedContent(Content, IsPreview);
+            return new ConvertedPublishedContent(Content, IsPreview);
         }
     }
 
     /// <summary>
     /// The published content.
     /// </summary>
-    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Reviewed. Suppression is OK here.")]
-    public class PublishedContent : PublishedContentWithKeyBase, IPublishedContent
+    public class ConvertedPublishedContent : PublishedContentBase, IPublishedContent
     {
         private readonly PublishedContentType _contentType;
 
@@ -65,7 +64,7 @@ namespace Dragonfly.UmbracoHelpers
         private readonly IPublishedProperty[] _properties;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PublishedContent"/> class.
+        /// Initializes a new instance of the <see cref="ConvertedPublishedContent"/> class.
         /// </summary>
         /// <param name="Inner">
         /// The inner.
@@ -73,7 +72,7 @@ namespace Dragonfly.UmbracoHelpers
         /// <param name="IsPreviewing">
         /// The is previewing.
         /// </param>
-        public PublishedContent(IContent Inner, bool IsPreviewing)
+        public ConvertedPublishedContent(IContent Inner, bool IsPreviewing) : base()
         {
             if (Inner == null)
             {
@@ -84,14 +83,14 @@ namespace Dragonfly.UmbracoHelpers
             this._isPreviewing = IsPreviewing;
 
             this._lazyUrlName = new Lazy<string>(() => this._inner.GetUrlSegment().ToLower());
-#pragma warning disable 618
-            this._lazyCreatorName = new Lazy<string>(() => this._inner.GetCreatorProfile().Name);
-#pragma warning restore 618
-#pragma warning disable 618
-            this._lazyWriterName = new Lazy<string>(() => this._inner.GetWriterProfile().Name);
-#pragma warning restore 618
 
-            this._contentType = PublishedContentType.Get(PublishedItemType.Content, this._inner.ContentType.Alias);
+            this._lazyCreatorName = new Lazy<string>(() => this._inner.GetCreatorProfile().Name);
+
+            this._lazyWriterName = new Lazy<string>(() => this._inner.GetWriterProfile().Name);
+
+
+            //this._contentType = PublishedContentType.Get(PublishedItemType.Content, this._inner.ContentType.Alias);
+            this._contentType = _inner.ContentType;
 
             this._properties =
                 MapProperties(
@@ -100,49 +99,49 @@ namespace Dragonfly.UmbracoHelpers
                     (T, V) => new PublishedProperty(T, V, this._isPreviewing)).ToArray();
         }
 
-        ///// <summary>
-        ///// Gets the id.
-        ///// </summary>
-        //public override int Id
-        //{
-        //    get
-        //    {
-        //        return this.inner.Id;
-        //    }
-        //}
+        /// <summary>
+        /// Gets the id.
+        /// </summary>
+        public override int Id
+        {
+            get
+            {
+                return this.inner.Id;
+            }
+        }
 
-        ///// <summary>
-        ///// Gets the key.
-        ///// </summary>
-        //public override Guid Key
-        //{
-        //    get
-        //    {
-        //        return this.inner.Key;
-        //    }
-        //}
+        /// <summary>
+        /// Gets the key.
+        /// </summary>
+        public override Guid Key
+        {
+            get
+            {
+                return this.inner.Key;
+            }
+        }
 
-        ///// <summary>
-        ///// Gets the document type id.
-        ///// </summary>
-        //public override int DocumentTypeId
-        //{
-        //    get
-        //    {
-        //        return this.inner.ContentTypeId;
-        //    }
-        //}
+        /// <summary>
+        /// Gets the document type id.
+        /// </summary>
+        public override int DocumentTypeId
+        {
+            get
+            {
+                return this.inner.ContentTypeId;
+            }
+        }
 
-        ///// <summary>
-        ///// Gets the document type alias.
-        ///// </summary>
-        //public override string DocumentTypeAlias
-        //{
-        //    get
-        //    {
-        //        return this.inner.ContentType.Alias;
-        //    }
-        //}
+        /// <summary>
+        /// Gets the document type alias.
+        /// </summary>
+        public override string DocumentTypeAlias
+        {
+            get
+            {
+                return this.inner.ContentType.Alias;
+            }
+        }
 
         /// <summary>
         /// Gets the item type.
@@ -566,11 +565,6 @@ namespace Dragonfly.UmbracoHelpers
     internal abstract class PublishedPropertyBase : IPublishedProperty
     {
         /// <summary>
-        /// The property type.
-        /// </summary>
-        public readonly PublishedPropertyType PropertyType;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="PublishedPropertyBase"/> class.
         /// </summary>
         /// <param name="PropertyType">
@@ -593,7 +587,7 @@ namespace Dragonfly.UmbracoHelpers
         {
             get
             {
-                return this.PropertyType.PropertyTypeAlias;
+                return this.PropertyType.Alias;
             }
         }
 
@@ -616,5 +610,33 @@ namespace Dragonfly.UmbracoHelpers
         /// Gets the x path value.
         /// </summary>
         public abstract object XPathValue { get; }
+
+        #region Implementation of IPublishedProperty
+
+        bool IPublishedProperty.HasValue(string culture, string segment)
+        {
+            return false;
+        }
+
+        public object GetSourceValue(string culture = null, string segment = null)
+        {
+            return null;
+        }
+
+        public object GetValue(string culture = null, string segment = null)
+        {
+            return null;
+        }
+
+        public object GetXPathValue(string culture = null, string segment = null)
+        {
+            return null;
+        }
+
+        public PublishedPropertyType PropertyType { get; }
+
+        public string Alias { get; }
+
+        #endregion
     }
 }

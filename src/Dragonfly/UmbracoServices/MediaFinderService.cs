@@ -5,6 +5,7 @@
     using Umbraco.Core;
     using Umbraco.Core.Models;
     using Umbraco.Core.Models.PublishedContent;
+    using Umbraco.Web;
 
     public class MediaFinderService
     {
@@ -16,9 +17,9 @@
         /// Service to retrieve Media Nodes via various search methods
         /// </summary>
         /// <param name="umbHelper">UmbracoHelper passed-in</param>
-        public MediaFinderService(UmbracoHelper umbHelper)
+        public MediaFinderService(UmbracoHelper UmbHelper)
         {
-            _umbHelper = umbHelper;
+            _umbHelper = UmbHelper;
         }
 
         #region Get By Name
@@ -69,7 +70,7 @@
 
             if (StartNodeId > 0)
             {
-                var startMedia = _umbHelper.TypedMedia(StartNodeId);
+                var startMedia = _umbHelper.Media(StartNodeId);
                 allMediaList.AddRange(FindDescendantsByName(startMedia, MediaName));
             }
             else
@@ -87,7 +88,7 @@
 
             if (MediaTypeAlias != "")
             {
-                var limitedMediaList = allMediaList.Where(n => n.DocumentTypeAlias == MediaTypeAlias);
+                var limitedMediaList = allMediaList.Where(n => n.ContentType.Alias == MediaTypeAlias);
                 return limitedMediaList;
             }
             else
@@ -143,7 +144,7 @@
 
             if (StartNodeId > 0)
             {
-                var startMedia = _umbHelper.TypedMedia(StartNodeId);
+                var startMedia = _umbHelper.Media(StartNodeId);
                 allMediaList.AddRange(FindDescendantsByFilePath(startMedia, MediaFilePath));
             }
             else
@@ -161,7 +162,7 @@
 
             if (MediaTypeAlias != "")
             {
-                var limitedMediaList = allMediaList.Where(n => n.DocumentTypeAlias == MediaTypeAlias);
+                var limitedMediaList = allMediaList.Where(n => n.ContentType.Alias == MediaTypeAlias);
                 return limitedMediaList;
             }
             else
@@ -175,7 +176,7 @@
         {
             //var mediaList = new List<IPublishedContent>();
 
-            return StartMedia.DescendantsOrSelf().Where(n => n.GetPropertyValue<string>("umbracoFile") == MediaPath);
+            return StartMedia.DescendantsOrSelf().Where(n => n.Value<string>("umbracoFile") == MediaPath);
         }
 
         #endregion
@@ -186,7 +187,7 @@
         {
             if (!_mediaAtRoot.Any())
             {
-                _mediaAtRoot = _umbHelper.TypedMediaAtRoot();
+                _mediaAtRoot = _umbHelper.MediaAtRoot();
             }
 
             return _mediaAtRoot;

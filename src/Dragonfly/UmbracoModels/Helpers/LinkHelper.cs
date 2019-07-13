@@ -1,14 +1,12 @@
 ﻿namespace Dragonfly.UmbracoModels.Helpers
 {
+    using Dragonfly.UmbracoHelpers;
     using System;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
-    using DataTypes;
-    using Newtonsoft.Json;
-    using Umbraco.Core.Models;
     using Umbraco.Core.Models.PublishedContent;
-    using Umbraco7Helpers;
+    using Umbraco.Web;
     using UmbracoModels;
 
     /// <summary>
@@ -70,7 +68,7 @@
             {
                 ContentId = TierContentItem.Id,
                 ContentNode = TierContentItem,
-                ContentTypeAlias = TierContentItem.DocumentTypeAlias,
+                ContentTypeAlias = TierContentItem.ContentType.Alias,
                 Title = this.GetNavDisplayName(TierContentItem),
                 Url = ContentHasTemplate(TierContentItem) ? TierContentItem.Url : string.Empty,
                 CssClass = active ? "active" : string.Empty
@@ -80,7 +78,7 @@
 
             if (TierLevel > MaxLevel && MaxLevel != 0) return tier;
 
-            foreach (var item in TierContentItem.Children.ToList().Where(x => x.IsVisible() && (ContentHasTemplate(x) || (IncludeContentWithoutTemplate && x.IsVisible())) && !ExcludeDocumentTypes.Contains(x.DocumentTypeAlias)))
+            foreach (var item in TierContentItem.Children.ToList().Where(x => x.IsVisible() && (ContentHasTemplate(x) || (IncludeContentWithoutTemplate && x.IsVisible())) && !ExcludeDocumentTypes.Contains(x.ContentType.Alias)))
             {
                 var newTier = this.BuildLinkTier(item, CurrentContent, ExcludeDocumentTypes, item.Level, MaxLevel);
 
@@ -136,7 +134,7 @@
             {
                 ContentNode = CurrentContent,
                 ContentId = CurrentContent.Id,
-                ContentTypeAlias = CurrentContent.DocumentTypeAlias,
+                ContentTypeAlias = CurrentContent.ContentType.Alias,
                 Title = linkText,
                 Target = "_self",
                 Url = CurrentContent.Url,
@@ -175,7 +173,7 @@
             var link = new Link()
             {
                 ContentId = ContentNode.Id,
-                ContentTypeAlias = ContentNode.DocumentTypeAlias,
+                ContentTypeAlias = ContentNode.ContentType.Alias,
                 Title = linkText,
                 Target = "_self",
                 Url = ContentNode.Url,
@@ -276,11 +274,11 @@
 
     public static class LinkExtensions
     {
-        private static UmbracoHelper umbracoHelper = new UmbracoHelper(UmbracoContext.Current);
+        //private static UmbracoHelper umbracoHelper = new UmbracoHelper(UmbracoContext.Current);
 
         #region ToILink Extension Methods
 
-        public static ILink ToILink(this Newtonsoft.Json.Linq.JToken token)
+        public static ILink ToILink(this Newtonsoft.Json.Linq.JToken token, UmbracoHelper UmbHelper)
         {
             var link = new Link();
 
@@ -295,19 +293,19 @@
                 if (tokendata.id != 0)
                 {
                     link.ContentId = tokendata.id;
-                    var contentNode = umbracoHelper.TypedContent(link.ContentId);
+                    var contentNode = UmbHelper.Content(link.ContentId);
                     if (contentNode != null)
                     {
                         link.ContentNode = contentNode;
-                        link.ContentTypeAlias = contentNode.DocumentTypeAlias;
+                        link.ContentTypeAlias = contentNode.ContentType.Alias;
                     }
                     else
                     {
                         //try media node
-                        var mediaNode = umbracoHelper.TypedMedia(link.ContentId);
+                        var mediaNode = UmbHelper.Media(link.ContentId);
                         if (mediaNode != null)
                         {
-                            link.ContentTypeAlias = mediaNode.DocumentTypeAlias;
+                            link.ContentTypeAlias = mediaNode.ContentType.Alias;
                             if (link.Url.StartsWith("/media/"))
                             {
                                 var media = mediaNode.ToMediaFile();
@@ -322,50 +320,50 @@
             return link;
         }
 
- 
+
 
         #endregion
 
         #region To IEnum<ILink> Extension Methods
 
-        private static IEnumerable<ILink> JObjectToILinks(string ObjValue)
-        {
-            var allLinks = new List<ILink>();
+        //private static IEnumerable<ILink> JObjectToILinks(string ObjValue)
+        //{
+        //    var allLinks = new List<ILink>();
 
-            if (ObjValue != "" & ObjValue != "[]")
-            {
-                IEnumerable<RelatedLink> relatedLinks = JObjectToRelatedLinks(ObjValue);
+        //    if (ObjValue != "" & ObjValue != "[]")
+        //    {
+        //        IEnumerable<RelatedLink> relatedLinks = JObjectToRelatedLinks(ObjValue);
 
-                foreach (var rl in relatedLinks)
-                {
-                    allLinks.Add(rl.ToILink());
-                }
-            }
+        //        foreach (var rl in relatedLinks)
+        //        {
+        //            allLinks.Add(rl.ToILink());
+        //        }
+        //    }
 
-            return allLinks;
-        }
+        //    return allLinks;
+        //}
 
         #endregion
 
 
-        private static IEnumerable<RelatedLink> JObjectToRelatedLinks(string ObjValue)
-        {
-            var allLinks = new List<RelatedLink>();
+        //private static IEnumerable<RelatedLink> JObjectToRelatedLinks(string ObjValue)
+        //{
+        //    var allLinks = new List<RelatedLink>();
 
-            //var rls = (IEnumerable<RelatedLink>)JsonConvert.DeserializeObject(ObjValue);
+        //    //var rls = (IEnumerable<RelatedLink>)JsonConvert.DeserializeObject(ObjValue);
 
-            dynamic jsonObj = JsonConvert.DeserializeObject(ObjValue);
+        //    dynamic jsonObj = JsonConvert.DeserializeObject(ObjValue);
 
-            foreach (var obj in jsonObj)
-            {
-                RelatedLink rl = new RelatedLink(obj);
-                allLinks.Add(rl);
-            }
+        //    foreach (var obj in jsonObj)
+        //    {
+        //        RelatedLink rl = new RelatedLink(obj);
+        //        allLinks.Add(rl);
+        //    }
 
 
-            // JArray array = JsonConvert.DeserializeObject(ObjValue);
-            //IEnumerable<RelatedLink> links = array
-            return allLinks;
-        }
+        //    // JArray array = JsonConvert.DeserializeObject(ObjValue);
+        //    //IEnumerable<RelatedLink> links = array
+        //    return allLinks;
+        //}
     }
 }

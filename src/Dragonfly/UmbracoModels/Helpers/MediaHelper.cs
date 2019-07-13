@@ -1,17 +1,17 @@
 ﻿namespace Dragonfly.UmbracoModels.Helpers
 {
+    using DataTypes;
+    using Dragonfly.UmbracoHelpers;
+    using Dragonfly.UmbracoModels;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using DataTypes;
-    using Umbraco.Core.Models;
     using Umbraco.Core.Models.PublishedContent;
-    using Umbraco7Helpers;
-    using UmbracoModels;
+    using Umbraco.Web;
 
     public static class MediaHelper
     {
-        public static IMediaImage MediaIdToSafeImage(int? MediaId, UmbracoHelper Umbraco, IMediaImage DefaultImage = null)
+        public static IMediaImage MediaIdToSafeImage(int? MediaId, UmbracoHelper UmbHelper, IMediaImage DefaultImage = null)
         {
             if (MediaId == null || MediaId == 0)
             {
@@ -19,7 +19,7 @@
             }
             else
             {
-                var mediaNode = Umbraco.TypedMedia(MediaId);
+                var mediaNode = UmbHelper.Media(MediaId);
                 if (mediaNode != null)
                 {
                     var mImage = mediaNode.ToMediaImage();
@@ -28,7 +28,7 @@
                 else
                 {
                     //return default or empty image
-                return DefaultImage != null ? DefaultImage : new MediaImage();
+                    return DefaultImage != null ? DefaultImage : new MediaImage();
                 }
             }
         }
@@ -41,7 +41,7 @@
             }
             else
             {
-                var mediaNode = Umbraco.TypedMedia(MediaGuid);
+                var mediaNode = Umbraco.Media(MediaGuid);
                 if (mediaNode != null)
                 {
                     var mImage = mediaNode.ToMediaImage();
@@ -86,7 +86,7 @@
                 dynamic umbMedia = PropValue;
                 if (umbMedia.Id != 0)
                 {
-                    var mediaNode = Umbraco.TypedMedia(umbMedia.Id) as IPublishedContent;
+                    var mediaNode = Umbraco.Media(umbMedia.Id) as IPublishedContent;
                     var mImage = mediaNode.ToMediaImage();
 
                     return mImage;
@@ -99,9 +99,9 @@
             else if (type == "System.String")
             {
                 //see if this is a media id...
-                dynamic umbMedia = Umbraco.TypedMedia(PropValue);
-                var mediaNode = Umbraco.TypedMedia(umbMedia.Id) as IPublishedContent;
-                var mImage = mediaNode.ToImage();
+                dynamic umbMedia = Umbraco.Media(PropValue);
+                var mediaNode = Umbraco.Media(umbMedia.Id) as IPublishedContent;
+                var mImage = mediaNode.ToMediaImage();
 
                 return mImage;
             }
@@ -139,16 +139,16 @@
         {
             var images = new List<MediaImage>();
 
-            if (TopMediaItem.DocumentTypeAlias != "Folder")
+            if (TopMediaItem.ContentType.Alias != "Folder")
             {
-                var mediaImage = TopMediaItem.ToImage();
+                var mediaImage = TopMediaItem.ToMediaImage();
                 images.Add(mediaImage as MediaImage);
             }
             else
             {
                 foreach (var media in TopMediaItem.Children)
                 {
-                    if (media.DocumentTypeAlias == "Folder")
+                    if (media.ContentType.Alias == "Folder")
                     {
                         foreach (var child in media.Children)
                         {
@@ -157,7 +157,7 @@
                     }
                     else
                     {
-                        images.Add(media.ToImage() as MediaImage);
+                        images.Add(media.ToMediaImage() as MediaImage);
                     }
                 }
             }
@@ -175,7 +175,7 @@
             }
 
             //check for property value
-            var propValue = content.GetPropertyValue(propertyAlias);
+            var propValue = content.Value(propertyAlias);
 
             var type = propValue.GetType().ToString();
             if (type == "Umbraco.Web.PublishedCache.XmlPublishedCache.PublishedMediaCache+DictionaryPublishedContent")
@@ -184,8 +184,8 @@
                 dynamic umbMedia = propValue;
                 if (umbMedia.Id != 0)
                 {
-                    var mediaNode = umbraco.TypedMedia(umbMedia.Id) as IPublishedContent;
-                    var mImage = mediaNode.ToImage();
+                    var mediaNode = umbraco.Media(umbMedia.Id) as IPublishedContent;
+                    var mImage = mediaNode.ToMediaImage();
 
                     return mImage;
                 }
@@ -196,7 +196,7 @@
 
                 if (mediaContent.Any())
                 {
-                    return mediaContent.Where(x => x != null).Select(x => x.ToImage()).FirstOrDefault();
+                    return mediaContent.Where(x => x != null).Select(x => x.ToMediaImage()).FirstOrDefault();
                 }
                 else
                 {
@@ -249,7 +249,7 @@
 
             if (mediaContent.Any())
             {
-                return mediaContent.Where(x => x != null).Select(x => x.ToImage());
+                return mediaContent.Where(x => x != null).Select(x => x.ToMediaImage());
             }
             else
             {
