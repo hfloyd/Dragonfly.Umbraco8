@@ -308,7 +308,7 @@
                             link.ContentTypeAlias = mediaNode.ContentType.Alias;
                             if (link.Url.StartsWith("/media/"))
                             {
-                                var media = mediaNode.ToMediaFile();
+                                var media = mediaNode.ToIMediaFile();
                                 link.MediaFile = media;
                                 link.IsMedia = true;
                             }

@@ -1,14 +1,13 @@
 ﻿namespace Dragonfly.UmbracoModels
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
     using Dragonfly.UmbracoHelpers;
     using Newtonsoft.Json.Linq;
-    using Umbraco.Core.Logging;
-    using Umbraco.Core.Models;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Web;
     using Umbraco.Core.Models.PublishedContent;
+    using Umbraco.Core.PropertyEditors.ValueConverters;
     using Umbraco.Web;
 
 
@@ -16,8 +15,7 @@
     {
         private const string ThisClassName = "Dragonfly.UmbracoModels.MediaExtensions";
 
-
-        #region IPublishedContent to MediaFile
+        #region IPublishedContent to IMediaFile
 
         /// <summary>
         /// Utility extension to convert <see cref="IPublishedContent"/> to an <see cref="MediaFile"/>
@@ -28,7 +26,7 @@
         /// <returns>
         /// The <see cref="MediaFile"/>.
         /// </returns>
-        public static MediaFile ToMediaFile(this IPublishedContent MediaContent)
+        public static IMediaFile ToIMediaFile(this IPublishedContent MediaContent)
         {
             return new MediaFile()
             {
@@ -36,7 +34,7 @@
                 Id = MediaContent.Id,
                 Bytes = MediaContent.GetSafeInt("umbracoBytes", 0),
                 Extension = MediaContent.GetSafeString("umbracoExtension"),
-                Url = MediaContent.Url,
+                Url = MediaContent.GetSafeString("umbracoFile"), //MediaContent.Url,
                 Name = MediaContent.Name
             };
         }
@@ -50,54 +48,16 @@
         /// <returns>
         /// The collection of <see cref="MediaFile"/>.
         /// </returns>
-        public static IEnumerable<MediaFile> ToMediaFiles(this IEnumerable<IPublishedContent> Contents)
+        public static IEnumerable<IMediaFile> ToIMediaFiles(this IEnumerable<IPublishedContent> Contents)
         {
-            var iMedia = Contents.ToList().Select<IPublishedContent, IMediaFile>(X => X.ToMediaFile());
-            return iMedia.ToMediaFiles();
+            var iMedia = Contents.ToList().Select<IPublishedContent, IMediaFile>(X => X.ToIMediaFile());
+            return iMedia;
         }
 
 
         #endregion
 
-        #region IMediaFile to MediaFile
-
-        public static IEnumerable<MediaFile> ToMediaFiles(this IEnumerable<IMediaFile> Medias)
-        {
-            var all = new List<MediaFile>();
-
-            foreach (var iMedia in Medias)
-            {
-                if (iMedia != null)
-                {
-                    all.Add(iMedia as MediaFile);
-                }
-            }
-
-            return all;
-        }
-
-        #endregion
-
-        #region IMediaImage to MediaImage
-
-        public static IEnumerable<MediaImage> ToMediaImages(this IEnumerable<IMediaImage> Medias)
-        {
-            var all = new List<MediaImage>();
-
-            foreach (var iMedia in Medias)
-            {
-                if (iMedia != null)
-                {
-                    all.Add(iMedia as MediaImage);
-                }
-            }
-
-            return all;
-        }
-
-        #endregion
-
-        #region IPublishedContent to MediaImage
+        #region IPublishedContent to IMediaImage
 
         /// <summary>
         /// Creates a collection of <see cref="MediaImage"/> from a list of <see cref="IPublishedContent"/> (media)
@@ -108,9 +68,9 @@
         /// <returns>
         /// The collection of <see cref="MediaImage"/>.
         /// </returns>
-        public static IEnumerable<MediaImage> ToMediaImages(this IEnumerable<IPublishedContent> Contents)
+        public static IEnumerable<IMediaImage> ToIMediaImages(this IEnumerable<IPublishedContent> Contents)
         {
-            var images =  Contents.ToList().Select(X => X.ToMediaImage());
+            var images = Contents.ToList().Select(X => X.ToIMediaImage());
             return images;
         }
 
@@ -120,29 +80,17 @@
         /// <returns>
         /// The <see cref="MediaImage"/>.
         /// </returns>
-        public static MediaImage ToMediaImage(this IPublishedContent MediaContent, string ImageName = "", string AltText = "", string AltDictionary = "")
+        public static IMediaImage ToIMediaImage(this IPublishedContent MediaContent)
         {
-            var name = ImageName != "" ? ImageName : MediaContent.GetSafeString("Name");
-            if (name == "")
-            {
-                name = MediaContent.Name;
-            }
-
-            var altText = AltText != "" ? AltText : MediaContent.GetSafeString("ImageAltText");
-            if (altText == "")
-            {
-                altText = MediaContent.Name;
-            }
-
             var img = new MediaImage()
             {
                 Content = MediaContent,
                 Id = MediaContent.Id,
                 Bytes = MediaContent.GetSafeInt("umbracoBytes", 0),
                 Extension = MediaContent.GetSafeString("umbracoExtension"),
-                Name = name,
-                ImageAltText = altText,
-                ImageAltDictionaryKey = AltDictionary != "" ? AltDictionary : MediaContent.GetSafeString("ImageAltDictionaryKey"),
+                Name = MediaContent.Name,
+                //ImageAltText = altText,
+                //ImageAltDictionaryKey = AltDictionary != "" ? AltDictionary : MediaContent.GetSafeString("ImageAltDictionaryKey"),
                 OriginalPixelWidth = MediaContent.GetSafeInt("umbracoWidth", 0),
                 OriginalPixelHeight = MediaContent.GetSafeInt("umbracoHeight", 0)
             };
@@ -150,79 +98,38 @@
             var urlDataObj = MediaContent.Value("umbracoFile");
             var urlDataType = urlDataObj.GetType().ToString();
 
-            //if (urlDataType == "Umbraco.Web.Models.ImageCropDataSet")
-            //{
-            //    var urlDataCropSet = urlDataObj as ImageCropDataSet;
-            //    img.Url = urlDataCropSet.Src;
-
-            //    if (urlDataCropSet.HasFocalPoint())
-            //    {
-            //        img.HasFocalPoint = true;
-            //        img.FocalPointLeft = Convert.ToDouble(urlDataCropSet.FocalPoint.Left);
-            //        img.FocalPointTop = Convert.ToDouble(urlDataCropSet.FocalPoint.Top);
-            //    }
-            //    else
-            //    {
-            //        img.HasFocalPoint = false;
-            //        img.FocalPointLeft = 0;
-            //        img.FocalPointTop = 0;
-            //    }
-            //}
-            //else 
-            if (urlDataType == "System.String")
+            if (urlDataType.Contains("ImageCropperValue"))
             {
-                var urlDataString = urlDataObj as string;
+                var urlDataCropSet = urlDataObj as ImageCropperValue;
+                img.Url = urlDataCropSet.Src;
+                img.CropData = urlDataCropSet;
 
-                if (urlDataString.StartsWith("{"))
-                {
-                    JObject jsonCrop = JObject.Parse(urlDataString);
-
-                    img.JsonCropData = jsonCrop;
-
-                    JToken src;
-                    var srcFound = jsonCrop.TryGetValue("src", out src);
-                    if (srcFound)
-                    {
-                        img.Url = src.ToString();
-                    }
-                    else
-                    {
-                        img.Url = "";
-                    }
-
-                    JToken focalPoint;
-                    var focalPointFound = jsonCrop.TryGetValue("focalPoint", out focalPoint);
-                    if (focalPointFound)
-                    {
-                        img.HasFocalPoint = true;
-
-                        var left = focalPoint["left"].ToString();
-                        img.FocalPointLeft = Convert.ToDouble(left);
-
-                        var top = focalPoint["top"].ToString();
-                        img.FocalPointTop = Convert.ToDouble(top);
-                    }
-                    else
-                    {
-                        img.HasFocalPoint = false;
-                        img.FocalPointLeft = 0;
-                        img.FocalPointTop = 0;
-                    }
-                }
-                else
-                {
-                    img.Url = urlDataString.ToString();
-                    img.JsonCropData = null;
-                    img.FocalPointLeft = 0;
-                    img.FocalPointTop = 0;
-                }
+                //if (urlDataCropSet.HasFocalPoint())
+                //{
+                //    img.HasFocalPoint = true;
+                //    img.FocalPointLeft = Convert.ToDouble(urlDataCropSet.FocalPoint.Left);
+                //    img.FocalPointTop = Convert.ToDouble(urlDataCropSet.FocalPoint.Top);
+                //}
+                //else
+                //{
+                //    img.HasFocalPoint = false;
+                //    img.FocalPointLeft = 0;
+                //    img.FocalPointTop = 0;
+                //}
             }
+
+            else
+            {
+                img.Url = urlDataObj.ToString();
+                //img.JsonCropData = null;
+                //img.FocalPointLeft = 0;
+                //img.FocalPointTop = 0;
+            }
+
             return img;
         }
 
-
         #endregion
-
 
         #region Building MediaImage from string data
 
@@ -232,19 +139,14 @@
         /// <returns>
         /// The <see cref="MediaImage"/>.
         /// </returns>
-        public static MediaImage ImgUrlToImage(string ImageSrcUrl, string ImageName = "", string AltText = "", string AltDictionary = "")
+        public static MediaImage ImgUrlToImage(string ImageSrcUrl, string ImageName = "")
         {
             var img = new MediaImage()
             {
                 Name = ImageName,
-                ImageAltText = AltText,
-                ImageAltDictionaryKey = AltDictionary,
                 Content = null,
                 Id = 0,
-                Url = ImageSrcUrl,
-                HasFocalPoint = false,
-                FocalPointLeft = 0,
-                FocalPointTop = 0
+                Url = ImageSrcUrl
             };
 
             if (ImageSrcUrl != "")
@@ -300,186 +202,7 @@
 
         #endregion
 
-        #region Crop Data Set to MediaImage //TODO
-
-
-
-        ///// <summary>
-        ///// Utility extension to convert <see cref="IPublishedContent"/> to an <see cref="IMediaImage"/>
-        ///// </summary>
-        ///// <returns>
-        ///// The <see cref="IMediaImage"/>.
-        ///// </returns>
-        //public static IMediaImage ToImage(this ImageCropDataSet CropData)
-        //{
-        //    var img = new MediaImage()
-        //    {
-        //        Content = null,
-        //        Id = 0,
-        //        Bytes = 0,
-        //        Url = CropData.Src,
-        //        Extension = "", //TODO: extract extension from filename (Src)
-        //        Name = "", //TODO: extract name from filename (Src)
-        //        ImageAltText = "",
-        //        ImageAltDictionaryKey = "",
-        //        OriginalPixelWidth = 0,
-        //        OriginalPixelHeight = 0
-        //    };
-
-        //    if (CropData.HasFocalPoint())
-        //    {
-        //        img.HasFocalPoint = true;
-        //        img.FocalPointLeft = Convert.ToDouble(CropData.FocalPoint.Left);
-        //        img.FocalPointTop = Convert.ToDouble(CropData.FocalPoint.Top);
-        //    }
-        //    else
-        //    {
-        //        img.HasFocalPoint = false;
-        //        img.FocalPointLeft = 0;
-        //        img.FocalPointTop = 0;
-        //    }
-
-        //    return img;
-        //}
-
-
-
-        ///// <summary>
-        ///// Utility extension to convert <see cref="IPublishedContent"/> crop to an <see cref="IMediaImage"/>
-        ///// </summary>
-        ///// <returns>
-        ///// The <see cref="IMediaImage"/>.
-        ///// </returns>
-        //public static IMediaImage CropperPropertyToImage(string ImageCropperProperty, string ImageName = "", string AltText = "", string AltDictionary = "")
-        //{
-        //    try
-        //    {
-        //        var jsonProp = new JObject(ImageCropperProperty);
-        //        return CropperPropertyToImage(jsonProp, ImageName, AltText, AltDictionary);
-        //    }
-        //    catch (ArgumentException exSystemArgumentException)
-        //    {
-        //        //most likely because only a file path is present, no crop data
-        //        return ImgUrlToImage(ImageCropperProperty, ImageName, AltText, AltDictionary);
-        //    }
-
-        //}
-
-        ///// <summary>
-        ///// Utility extension to convert <see cref="IPublishedContent"/> to an <see cref="IMediaImage"/>
-        ///// </summary>
-        ///// <returns>
-        ///// The <see cref="IMediaImage"/>.
-        ///// </returns>
-        //public static IMediaImage CropperPropertyToImage(JObject ImageCropperProperty, string ImageName = "", string AltText = "", string AltDictionary = "")
-        //{
-        //    var img = new MediaImage()
-        //    {
-        //        Name = ImageName,
-        //        ImageAltText = AltText,
-        //        ImageAltDictionaryKey = AltDictionary,
-        //        Content = null,
-        //        Id = 0
-        //    };
-
-        //    if (ImageCropperProperty != null)
-        //    {
-        //        try
-        //        {
-        //            //var jsonCrop = JObject.Parse(ImageCropperProperty);
-        //            var jsonCrop = ImageCropperProperty;
-        //            img.JsonCropData = jsonCrop;
-
-        //            JToken src;
-        //            var srcFound = jsonCrop.TryGetValue("src", out src);
-        //            if (srcFound)
-        //            {
-        //                img.Url = src.ToString();
-        //            }
-        //            else
-        //            {
-        //                img.Url = "";
-        //            }
-
-        //            JToken focalPoint;
-        //            var focalPointFound = jsonCrop.TryGetValue("focalPoint", out focalPoint);
-        //            if (focalPointFound)
-        //            {
-        //                img.HasFocalPoint = true;
-
-        //                var left = focalPoint["left"].ToString();
-        //                img.FocalPointLeft = Convert.ToDouble(left);
-
-        //                var top = focalPoint["top"].ToString();
-        //                img.FocalPointTop = Convert.ToDouble(top);
-        //            }
-        //            else
-        //            {
-        //                img.HasFocalPoint = false;
-        //                img.FocalPointLeft = 0;
-        //                img.FocalPointTop = 0;
-        //            }
-
-        //            //Get image info
-        //            img = AddFileInfoFromServer(img);
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            var msg =
-        //                $"{ThisClassName}.CropperPropertyToImage() ERROR [ImageCropperProperty:{ImageCropperProperty}] [ImageName: {ImageName}]";
-        //            LogHelper.Error<IMediaImage>(msg, e);
-        //        }
-        //    }
-
-        //    return img;
-        //}
-
-        #endregion
-
-
         #region GetSafeMediaFile
-
-        ///// <summary>
-        ///// Checks if the model has a property and a value for the property and returns either the <see cref="IMediaFile"/> representation
-        ///// of the property or the default <see cref="IMediaFile"/>
-        ///// </summary>
-        ///// <param name="model">
-        ///// The <see cref="RenderModel"/>
-        ///// </param>
-        ///// <param name="umbraco">
-        ///// The <see cref="UmbracoHelper"/>
-        ///// </param>
-        ///// <param name="propertyAlias">
-        ///// The Umbraco property alias.
-        ///// </param>
-        ///// <returns>
-        ///// The <see cref="IMediaFile"/>.
-        ///// </returns>
-        //public static IMediaFile GetSafeMediaFile(this RenderModel model, UmbracoHelper umbraco, string propertyAlias)
-        //{
-        //    return model.Content.GetSafeMediaFile(umbraco, propertyAlias);
-        //}
-
-        /// <summary>
-        /// Checks if the model has a property and a value for the property and returns either the <see cref="IMediaFile"/> representation
-        /// of the property or the default <see cref="IMediaFile"/>
-        /// </summary>
-        /// <param name="content">
-        /// The <see cref="IPublishedContent"/>
-        /// </param>
-        /// <param name="umbraco">
-        /// The <see cref="UmbracoHelper"/>
-        /// </param>
-        /// <param name="propertyAlias">
-        /// The Umbraco property alias.
-        /// </param>
-        /// <returns>
-        /// The <see cref="IMediaFile"/>.
-        /// </returns>
-        //public static IMediaFile GetSafeMediaFile(this IPublishedContent content, UmbracoHelper umbraco, string propertyAlias)
-        //{
-        //    return content.GetSafeMediaFile(umbraco, propertyAlias, null);
-        //}
 
         /// <summary>
         /// Checks if the model has a property and a value for the property and returns either the <see cref="IMediaFile"/> representation
@@ -520,7 +243,7 @@
                 if (umbMedia.Id != 0)
                 {
                     var mediaNode = Umbraco.Media(umbMedia.Id) as IPublishedContent;
-                    var mFile = mediaNode.ToMediaFile();
+                    var mFile = mediaNode.ToIMediaFile();
 
                     return mFile;
                 }
@@ -531,7 +254,7 @@
 
                 if (mediaContent.Any())
                 {
-                    return mediaContent.Where(X => X != null).Select(X => X.ToMediaFile()).FirstOrDefault();
+                    return mediaContent.Where(X => X != null).Select(X => X.ToIMediaFile()).FirstOrDefault();
                 }
                 else
                 {
@@ -547,27 +270,6 @@
             //return empty file
             return new MediaFile();
         }
-
-        ///// <summary>
-        ///// Checks if the model has a property and a value for the property and returns either the <see cref="IMediaFile"/> representation
-        ///// of the property or the default <see cref="IMediaFile"/>s
-        ///// </summary>
-        ///// <param name="model">
-        ///// The <see cref="RenderModel"/> which has the media picker property
-        ///// </param>
-        ///// <param name="umbraco">
-        ///// The <see cref="UmbracoHelper"/>
-        ///// </param>
-        ///// <param name="propertyAlias">
-        ///// The property alias of the media picker
-        ///// </param>        
-        ///// <returns>
-        ///// A collection of <see cref="IMediaFile"/>.
-        ///// </returns>
-        //public static IEnumerable<IMediaFile> GetSafeMediaFiles(this RenderModel model, UmbracoHelper umbraco, string propertyAlias)
-        //{
-        //    return model.Content.GetSafeMediaFiles(umbraco, propertyAlias, null);
-        //}
 
         /// <summary>
         /// Checks if the model has a property and a value for the property and returns either the <see cref="IMediaFile"/> representation
@@ -588,13 +290,13 @@
         /// <returns>
         /// A collection of <see cref="IMediaFile"/>.
         /// </returns>
-        public static IEnumerable<MediaFile> GetSafeMediaFiles(this IPublishedContent Content,  string PropertyAlias, UmbracoHelper Umbraco)
+        public static IEnumerable<IMediaFile> GetSafeMediaFiles(this IPublishedContent Content, string PropertyAlias, UmbracoHelper Umbraco)
         {
             var mediaContent = Content.GetSafeMultiContent(PropertyAlias, Umbraco).ToArray();
 
             if (mediaContent.Any())
             {
-                return mediaContent.Where(X => X != null).Select(X => X.ToMediaFile());
+                return mediaContent.Where(X => X != null).Select(X => X.ToIMediaFile());
             }
             else
             {
@@ -621,46 +323,24 @@
         /// <returns>
         /// A collection of <see cref="IMediaFile"/>.
         /// </returns>
-        public static IEnumerable<MediaFile> GetSafeMediaFiles(this IPublishedContent Content,  string PropertyAlias, UmbracoHelper Umbraco, IMediaFile DefaultFile)
+        public static IEnumerable<IMediaFile> GetSafeMediaFiles(this IPublishedContent Content, string PropertyAlias, UmbracoHelper Umbraco, IMediaFile DefaultFile)
         {
             var mediaContent = Content.GetSafeMultiContent(PropertyAlias, Umbraco).ToArray();
 
             if (mediaContent.Any())
             {
-                return mediaContent.Where(X => X != null).Select(X => X.ToMediaFile());
+                return mediaContent.Where(X => X != null).Select(X => X.ToIMediaFile());
             }
             else
             {
                 return new List<MediaFile>() { DefaultFile as MediaFile };
             }
 
-
         }
 
         #endregion
 
         #region GetSafeImage
-
-        ///// <summary>
-        ///// Checks if the model has a property and a value for the property and returns either the <see cref="IImage"/> representation
-        ///// of the property or the default <see cref="IMediaImage"/>
-        ///// </summary>
-        ///// <param name="model">
-        ///// The <see cref="RenderModel"/>
-        ///// </param>
-        ///// <param name="umbraco">
-        ///// The <see cref="UmbracoHelper"/>
-        ///// </param>
-        ///// <param name="propertyAlias">
-        ///// The Umbraco property alias.
-        ///// </param>
-        ///// <returns>
-        ///// The <see cref="IMediaImage"/>.
-        ///// </returns>
-        //public static IMediaImage GetSafeImage(this RenderModel model, UmbracoHelper umbraco, string propertyAlias)
-        //{
-        //    return model.Content.GetSafeImage(umbraco, propertyAlias);
-        //}
 
         /// <summary>
         /// Checks if the model has a property and a value for the property and returns either the <see cref="IImage"/> representation
@@ -678,7 +358,7 @@
         /// <returns>
         /// The <see cref="IMediaImage"/>.
         /// </returns>
-        public static IMediaImage GetSafeImage(this IPublishedContent Content,  string PropertyAlias, UmbracoHelper Umbraco)
+        public static IMediaImage GetSafeImage(this IPublishedContent Content, string PropertyAlias, UmbracoHelper Umbraco)
         {
             return Content.GetSafeImage(PropertyAlias, Umbraco, null);
         }
@@ -723,7 +403,7 @@
                     if (umbMedia.Id != 0)
                     {
                         var mediaNode = Umbraco.Media(umbMedia.Id) as IPublishedContent;
-                        var mImage = mediaNode.ToMediaImage();
+                        var mImage = mediaNode.ToIMediaImage();
 
                         return mImage;
                     }
@@ -744,7 +424,7 @@
 
                     if (mediaContent.Any())
                     {
-                        return mediaContent.Where(X => X != null).Select(X => X.ToMediaImage()).FirstOrDefault();
+                        return mediaContent.Where(X => X != null).Select(X => X.ToIMediaImage()).FirstOrDefault();
                     }
                     else
                     {
@@ -768,29 +448,6 @@
             //return default or empty image
             return DefaultImage != null ? DefaultImage : new MediaImage();
         }
-
-
-
-        ///// <summary>
-        ///// Checks if the model has a property and a value for the property and returns either the <see cref="IImage"/> representation
-        ///// of the property or the default <see cref="IMediaImage"/>s
-        ///// </summary>
-        ///// <param name="model">
-        ///// The <see cref="RenderModel"/> which has the media picker property
-        ///// </param>
-        ///// <param name="umbraco">
-        ///// The <see cref="UmbracoHelper"/>
-        ///// </param>
-        ///// <param name="propertyAlias">
-        ///// The property alias of the media picker
-        ///// </param>        
-        ///// <returns>
-        ///// A collection of <see cref="IMediaImage"/>.
-        ///// </returns>
-        //public static IEnumerable<IMediaImage> GetSafeImages(this RenderModel model, UmbracoHelper umbraco, string propertyAlias)
-        //{
-        //    return model.Content.GetSafeImages(umbraco, propertyAlias, null);
-        //}
 
         /// <summary>
         /// Checks if the model has a property and a value for the property and returns either the <see cref="IMediaImage"/> representation
@@ -817,7 +474,7 @@
 
             if (mediaContent.Any())
             {
-                return mediaContent.Where(X => X != null).Select(X => X.ToMediaImage());
+                return mediaContent.Where(X => X != null).Select(X => X.ToIMediaImage());
             }
             else
             {
@@ -852,13 +509,13 @@
         /// <returns>
         /// A collection of <see cref="IMediaImage"/>.
         /// </returns>
-        public static IEnumerable<MediaImage> GetSafeImages(this IPublishedContent Content, string PropertyAlias, UmbracoHelper Umbraco)
+        public static IEnumerable<IMediaImage> GetSafeImages(this IPublishedContent Content, string PropertyAlias, UmbracoHelper Umbraco)
         {
             var mediaContent = Content.GetSafeMultiContent(PropertyAlias, Umbraco).ToArray();
 
             if (mediaContent.Any())
             {
-                return mediaContent.Where(X => X != null).Select(X => X.ToMediaImage());
+                return mediaContent.Where(X => X != null).Select(X => X.ToIMediaImage());
             }
             else
             {
@@ -868,5 +525,152 @@
 
 
         #endregion
+
+        #region IMediaFile Extensions
+
+        /// <summary>
+        /// Gets the full url, including domain.
+        /// </summary>
+        /// <param name="AlternateDomain">If blank, will use the current hostname.</param>
+        /// <returns></returns>
+        public static string AbsoluteUrl(this IMediaImage media, string AlternateDomain = "")
+        {
+            if (media != null && media.Content != null)
+            {
+                var domain = AlternateDomain != ""
+                    ? AlternateDomain
+                    : HttpContext.Current.Request.ServerVariables["HTTP_HOST"].ToString();
+                var protocol = HttpContext.Current.Request.IsSecureConnection ? "https://" : "http://";
+                string absUrl = string.Format("{0}{1}{2}", protocol, domain, media.Url);
+
+                return absUrl;
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+        #endregion
+
+        #region IMediaImage Extensions
+
+        /// <summary>
+        /// Returns a Url to crop the image
+        /// </summary>
+        /// <param name="Width">Width in pixels</param>
+        /// <param name="Height">Height in pixels</param>
+        /// <returns></returns>
+        public static string GetCropUrl(this IMediaImage media, int Width, int Height)
+        {
+            if (media != null && media.Content != null)
+            {
+                var url = media.Url;
+
+                url += "?width=" + Width;
+                url += "&height=" + Height;
+
+                if (media.CropData != null)
+                {
+                    if (media.CropData.HasFocalPoint())
+                    {
+                        url += "&center=" + media.CropData.FocalPoint.Top + "," + media.CropData.FocalPoint.Left;
+                        url += "&mode=crop";
+                    }
+                }
+
+                return url;
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+        /// <summary>
+        /// Returns a url for a resized version
+        /// </summary>
+        /// <param name="Height">Pixel Height (use zero to exclude value)</param>
+        /// <param name="Width">Pixel Width (use zero to exclude value)</param>
+        /// <param name="BgColorForPadding">Hex code for color used to fill background, since there is no up-sizing. Example: "#FFFFFF"</param>
+        /// <param name="AdditionalParameters">List of Key/Value Pairs of additional ImageProcessor options</param>
+        /// <returns></returns>
+        public static string GetResizeUrl(this IMediaImage media, int Width, int Height, string BgColorForPadding, IEnumerable<KeyValuePair<string, string>> AdditionalParameters = null)
+        {
+            if (media != null && media.Content != null)
+            {
+                var baseUrl = media.Url;
+                var bgColor = BgColorForPadding.Replace("#", "");
+
+                var dimensions = "";
+                if (Width > 0 & Height > 0)
+                {
+                    dimensions = $"width={Width}&height={Height}";
+                }
+                else if (Width == 0 & Height > 0)
+                {
+                    dimensions = $"height={Height}";
+                }
+                else if (Width > 0 & Height == 0)
+                {
+                    dimensions = $"width={Width}";
+                }
+
+                var additionalParams = "";
+                if (AdditionalParameters != null)
+                {
+                    foreach (var kv in AdditionalParameters)
+                    {
+                        var param = $"&{kv.Key}={kv.Value}";
+                        additionalParams = additionalParams + param;
+                    }
+                }
+
+                var url = $"{baseUrl}?{dimensions}&upscale=false&bgcolor={bgColor}{additionalParams}";
+
+                return url;
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+        /// <summary>
+        /// Returns a url for a resized version
+        /// </summary>
+        /// <param name="Height">Pixel Height (use zero to exclude value)</param>
+        /// <param name="Width">Pixel Width (use zero to exclude value)</param>
+        /// <param name="BgColorForPadding">Hex code for color used to fill background, since there is no up-sizing. Example: "#FFFFFF"</param>
+        /// <returns></returns>
+        public static string GetResizeUrl(this IMediaImage media, int Width, int Height, string BgColorForPadding)
+        {
+            return GetResizeUrl(media, Width, Height, BgColorForPadding, AdditionalParameters: null);
+        }
+
+        /// <summary>
+        /// Returns a url for a resized version
+        /// </summary>
+        /// <param name="Height">Pixel Height (use zero to exclude value)</param>
+        /// <param name="Width">Pixel Width (use zero to exclude value)</param>
+        /// <param name="BgColorForPadding">Hex code for color used to fill background, since there is no up-sizing. Example: "#FFFFFF"</param>
+        /// <param name="AdditionalParametersAsString">Separated string of Key/Value Pairs of additional ImageProcessor options</param>
+        /// <returns></returns>
+        public static string GetResizeUrl(this IMediaImage media, int Width, int Height, string BgColorForPadding, string AdditionalParametersAsString)
+        {
+            if (AdditionalParametersAsString == "")
+            {
+                return GetResizeUrl(media, Width, Height, BgColorForPadding, AdditionalParameters: null);
+            }
+
+            var kvParams = Dragonfly.NetHelpers.Strings.ParseStringToKvPairs(AdditionalParametersAsString);
+
+            return GetResizeUrl(media, Width, Height, BgColorForPadding, AdditionalParameters: kvParams);
+        }
+
+
+
+        #endregion
+
     }
 }

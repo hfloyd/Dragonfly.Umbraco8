@@ -656,8 +656,8 @@
             A collection of <see cref="T:Dragonfly.UmbracoModels.IMediaImage"/>.
             </returns>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:Dragonfly.UmbracoModels.MediaExtensions.ToMediaFile(Umbraco.Core.Models.PublishedContent.IPublishedContent)" -->
-        <member name="M:Dragonfly.UmbracoModels.MediaExtensions.ToMediaFiles(System.Collections.Generic.IEnumerable{Umbraco.Core.Models.PublishedContent.IPublishedContent})">
+        <!-- Badly formed XML comment ignored for member "M:Dragonfly.UmbracoModels.MediaExtensions.ToIMediaFile(Umbraco.Core.Models.PublishedContent.IPublishedContent)" -->
+        <member name="M:Dragonfly.UmbracoModels.MediaExtensions.ToIMediaFiles(System.Collections.Generic.IEnumerable{Umbraco.Core.Models.PublishedContent.IPublishedContent})">
             <summary>
             Creates a collection of <see cref="T:Dragonfly.UmbracoModels.MediaFile"/> from a list of <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/> (media)
             </summary>
@@ -668,7 +668,7 @@
             The collection of <see cref="T:Dragonfly.UmbracoModels.MediaFile"/>.
             </returns>
         </member>
-        <member name="M:Dragonfly.UmbracoModels.MediaExtensions.ToMediaImages(System.Collections.Generic.IEnumerable{Umbraco.Core.Models.PublishedContent.IPublishedContent})">
+        <member name="M:Dragonfly.UmbracoModels.MediaExtensions.ToIMediaImages(System.Collections.Generic.IEnumerable{Umbraco.Core.Models.PublishedContent.IPublishedContent})">
             <summary>
             Creates a collection of <see cref="T:Dragonfly.UmbracoModels.MediaImage"/> from a list of <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/> (media)
             </summary>
@@ -679,7 +679,7 @@
             The collection of <see cref="T:Dragonfly.UmbracoModels.MediaImage"/>.
             </returns>
         </member>
-        <member name="M:Dragonfly.UmbracoModels.MediaExtensions.ToMediaImage(Umbraco.Core.Models.PublishedContent.IPublishedContent,System.String,System.String,System.String)">
+        <member name="M:Dragonfly.UmbracoModels.MediaExtensions.ToIMediaImage(Umbraco.Core.Models.PublishedContent.IPublishedContent)">
             <summary>
             Utility extension to convert <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/> to an <see cref="T:Dragonfly.UmbracoModels.MediaImage"/>
             </summary>
@@ -687,7 +687,7 @@
             The <see cref="T:Dragonfly.UmbracoModels.MediaImage"/>.
             </returns>
         </member>
-        <member name="M:Dragonfly.UmbracoModels.MediaExtensions.ImgUrlToImage(System.String,System.String,System.String,System.String)">
+        <member name="M:Dragonfly.UmbracoModels.MediaExtensions.ImgUrlToImage(System.String,System.String)">
             <summary>
             Create a <see cref="T:Dragonfly.UmbracoModels.MediaImage"/> from an Image URL
             </summary>
@@ -839,6 +839,50 @@
             A collection of <see cref="T:Dragonfly.UmbracoModels.IMediaImage"/>.
             </returns>
         </member>
+        <member name="M:Dragonfly.UmbracoModels.MediaExtensions.AbsoluteUrl(Dragonfly.UmbracoModels.IMediaImage,System.String)">
+            <summary>
+            Gets the full url, including domain.
+            </summary>
+            <param name="AlternateDomain">If blank, will use the current hostname.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoModels.MediaExtensions.GetCropUrl(Dragonfly.UmbracoModels.IMediaImage,System.Int32,System.Int32)">
+            <summary>
+            Returns a Url to crop the image
+            </summary>
+            <param name="Width">Width in pixels</param>
+            <param name="Height">Height in pixels</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoModels.MediaExtensions.GetResizeUrl(Dragonfly.UmbracoModels.IMediaImage,System.Int32,System.Int32,System.String,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.String}})">
+            <summary>
+            Returns a url for a resized version
+            </summary>
+            <param name="Height">Pixel Height (use zero to exclude value)</param>
+            <param name="Width">Pixel Width (use zero to exclude value)</param>
+            <param name="BgColorForPadding">Hex code for color used to fill background, since there is no up-sizing. Example: "#FFFFFF"</param>
+            <param name="AdditionalParameters">List of Key/Value Pairs of additional ImageProcessor options</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoModels.MediaExtensions.GetResizeUrl(Dragonfly.UmbracoModels.IMediaImage,System.Int32,System.Int32,System.String)">
+            <summary>
+            Returns a url for a resized version
+            </summary>
+            <param name="Height">Pixel Height (use zero to exclude value)</param>
+            <param name="Width">Pixel Width (use zero to exclude value)</param>
+            <param name="BgColorForPadding">Hex code for color used to fill background, since there is no up-sizing. Example: "#FFFFFF"</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoModels.MediaExtensions.GetResizeUrl(Dragonfly.UmbracoModels.IMediaImage,System.Int32,System.Int32,System.String,System.String)">
+            <summary>
+            Returns a url for a resized version
+            </summary>
+            <param name="Height">Pixel Height (use zero to exclude value)</param>
+            <param name="Width">Pixel Width (use zero to exclude value)</param>
+            <param name="BgColorForPadding">Hex code for color used to fill background, since there is no up-sizing. Example: "#FFFFFF"</param>
+            <param name="AdditionalParametersAsString">Separated string of Key/Value Pairs of additional ImageProcessor options</param>
+            <returns></returns>
+        </member>
         <member name="T:Dragonfly.UmbracoModels.IMediaFile">
             <summary>
             The MediaFile interface.
@@ -879,144 +923,15 @@
             Represents a file.
             </summary>
         </member>
-        <member name="P:Dragonfly.UmbracoModels.MediaFile.Content">
-            <summary>
-            Gets or sets the <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/> that this file represents
-            </summary>
-        </member>
-        <member name="P:Dragonfly.UmbracoModels.MediaFile.Id">
-            <summary>
-            Gets or sets the id.
-            </summary>
-        </member>
-        <member name="P:Dragonfly.UmbracoModels.MediaFile.Name">
-            <summary>
-            Gets or sets the name.
-            </summary>
-        </member>
-        <member name="P:Dragonfly.UmbracoModels.MediaFile.Url">
-            <summary>
-            Gets or sets the url.
-            </summary>
-        </member>
-        <member name="P:Dragonfly.UmbracoModels.MediaFile.Bytes">
-            <summary>
-            Gets or sets the bytes.
-            </summary>
-        </member>
-        <member name="P:Dragonfly.UmbracoModels.MediaFile.Extension">
-            <summary>
-            Gets or sets the extension.
-            </summary>
-        </member>
-        <member name="M:Dragonfly.UmbracoModels.MediaFile.AbsoluteUrl(System.String)">
-            <summary>
-            Gets the full url, including domain.
-            </summary>
-            <param name="AlternateDomain">If blank, will use the current hostname.</param>
-            <returns></returns>
-        </member>
         <member name="T:Dragonfly.UmbracoModels.IMediaImage">
             <summary>
-            Marker interface for a media image.
-            </summary>
-        </member>
-        <member name="P:Dragonfly.UmbracoModels.IMediaImage.ImageAltText">
-            <summary>
-            Gets or sets the Alt Text.
-            Default uses the MediaType Property "ImageAltText" or "ImageAltDictionaryKey"
-            </summary>
-        </member>
-        <member name="P:Dragonfly.UmbracoModels.IMediaImage.ImageAltDictionaryKey">
-            <summary>
-            Gets or sets the Alt Text.
+            Interface for a Media Image.
             </summary>
         </member>
         <member name="T:Dragonfly.UmbracoModels.MediaImage">
             <summary>
             Represents an image from the Media section of Umbraco
             </summary>
-        </member>
-        <member name="P:Dragonfly.UmbracoModels.MediaImage.Content">
-            <summary>
-            Gets or sets the <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/> that this image represents
-            </summary>
-        </member>
-        <member name="P:Dragonfly.UmbracoModels.MediaImage.Id">
-            <summary>
-            Gets or sets the id.
-            </summary>
-        </member>
-        <member name="P:Dragonfly.UmbracoModels.MediaImage.Name">
-            <summary>
-            Gets or sets the name.
-            </summary>
-        </member>
-        <member name="P:Dragonfly.UmbracoModels.MediaImage.Url">
-            <summary>
-            Gets or sets the url.
-            </summary>
-        </member>
-        <member name="P:Dragonfly.UmbracoModels.MediaImage.Bytes">
-            <summary>
-            Gets or sets the bytes.
-            </summary>
-        </member>
-        <member name="P:Dragonfly.UmbracoModels.MediaImage.Extension">
-            <summary>
-            Gets or sets the extension.
-            </summary>
-        </member>
-        <member name="M:Dragonfly.UmbracoModels.MediaImage.GetLocalizedAltText(Umbraco.Web.UmbracoHelper,System.Boolean)">
-            <summary>
-            Returns a localized alt text, if a Dictionary Key and/or Alt Text have been specified
-            </summary>
-            <param name="PreferDictionary">Using the Dictionary is preferred, so if the dictionary value for the language is missing, return data about that. If you'd rather get the default Alt text from the media item (regardless of language) set this to FALSE</param>
-            <returns></returns>
-        </member>
-        <member name="M:Dragonfly.UmbracoModels.MediaImage.GetCropUrl(System.Int32,System.Int32)">
-            <summary>
-            Returns a Url to crop the image
-            </summary>
-            <param name="Width">Width in pixels</param>
-            <param name="Height">Height in pixels</param>
-            <returns></returns>
-        </member>
-        <member name="M:Dragonfly.UmbracoModels.MediaImage.GetResizeUrl(System.Int32,System.Int32,System.String,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.String}})">
-            <summary>
-            Returns a url for a resized version
-            </summary>
-            <param name="Height">Pixel Height (use zero to exclude value)</param>
-            <param name="Width">Pixel Width (use zero to exclude value)</param>
-            <param name="BgColorForPadding">Hex code for color used to fill background, since there is no up-sizing. Example: "#FFFFFF"</param>
-            <param name="AdditionalParameters">List of Key/Value Pairs of additional ImageProcessor options</param>
-            <returns></returns>
-        </member>
-        <member name="M:Dragonfly.UmbracoModels.MediaImage.GetResizeUrl(System.Int32,System.Int32,System.String)">
-            <summary>
-            Returns a url for a resized version
-            </summary>
-            <param name="Height">Pixel Height (use zero to exclude value)</param>
-            <param name="Width">Pixel Width (use zero to exclude value)</param>
-            <param name="BgColorForPadding">Hex code for color used to fill background, since there is no up-sizing. Example: "#FFFFFF"</param>
-            <returns></returns>
-        </member>
-        <member name="M:Dragonfly.UmbracoModels.MediaImage.GetResizeUrl(System.Int32,System.Int32,System.String,System.String)">
-            <summary>
-            Returns a url for a resized version
-            </summary>
-            <param name="Height">Pixel Height (use zero to exclude value)</param>
-            <param name="Width">Pixel Width (use zero to exclude value)</param>
-            <param name="BgColorForPadding">Hex code for color used to fill background, since there is no up-sizing. Example: "#FFFFFF"</param>
-            <param name="AdditionalParametersAsString">Separated string of Key/Value Pairs of additional ImageProcessor options</param>
-            <returns></returns>
-        </member>
-        <member name="M:Dragonfly.UmbracoModels.MediaImage.AbsoluteUrl(System.String)">
-            <summary>
-            Gets the full url, including domain.
-            </summary>
-            <param name="AlternateDomain">If blank, will use the current hostname.</param>
-            <returns></returns>
         </member>
         <member name="T:Dragonfly.UmbracoModels.ILink">
             <summary>
