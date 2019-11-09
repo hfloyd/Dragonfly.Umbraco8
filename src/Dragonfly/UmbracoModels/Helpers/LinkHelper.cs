@@ -230,7 +230,8 @@
             try
             {
                 var template = content.GetTemplateAlias();
-                return !string.IsNullOrEmpty(template);
+                var hasTemplate = !string.IsNullOrEmpty(template);
+                return hasTemplate;
             }
             catch (Exception)
             {

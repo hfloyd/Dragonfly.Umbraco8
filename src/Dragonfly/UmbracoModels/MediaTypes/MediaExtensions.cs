@@ -570,14 +570,20 @@
                 url += "?width=" + Width;
                 url += "&height=" + Height;
 
+                var fpTop = (decimal)0.5;
+                var fpLeft = (decimal)0.5;
                 if (media.CropData != null)
                 {
                     if (media.CropData.HasFocalPoint())
                     {
-                        url += "&center=" + media.CropData.FocalPoint.Top + "," + media.CropData.FocalPoint.Left;
-                        url += "&mode=crop";
+                        fpTop = media.CropData.FocalPoint.Top;
+                        fpLeft = media.CropData.FocalPoint.Left;
+
                     }
                 }
+
+                url += "&center=" + fpTop + "," + fpLeft;
+                url += "&mode=crop";
 
                 return url;
             }
