@@ -9,11 +9,12 @@ Latest NuGet Package available @ [www.nuget.org/packages/Dragonfly.Umbraco8/](ht
 ## Versions ##
 Certain versions have been compiled with a minimum required Umbraco CMS dependency. Listed below are the latest versions for each minimum Umbraco version.
 
-**Minimum Umbraco 8.0**
-
+**Minimum Umbraco Version 8.1**
 (Current version)
 
     PM > Install-Package Dragonfly.Umbraco8 
 
-    PM > Install-Package Dragonfly.Umbraco8 -Version 1.0.0
+**Minimum Umbraco Version 8.0**
+
+    PM > Install-Package Dragonfly.Umbraco8 -Version 0.1.0
 
