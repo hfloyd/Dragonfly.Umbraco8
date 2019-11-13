@@ -15,10 +15,10 @@
     <PackageId>Dragonfly.Umbraco8</PackageId>
     <AssemblyName>Dragonfly.Umbraco8</AssemblyName>
     <RootNamespace>Dragonfly</RootNamespace>
-    <Version>0.8.0</Version>
-    <AssemblyVersion>0.8.0</AssemblyVersion>
-    <FileVersion>0.8.0</FileVersion>
-    <PackageReleaseNotes>Adjusted ContentExtensions, Renamed UmbracoServices namespace, enhancements to IMediaFile</PackageReleaseNotes>
+    <Version>0.9.0</Version>
+    <AssemblyVersion>0.9.0</AssemblyVersion>
+    <FileVersion>0.9.0</FileVersion>
+    <PackageReleaseNotes>MediaImage.GetCropUrl() updates</PackageReleaseNotes>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>C:\Users\Heather\NAS Folders\Active Projects\Webs\~Code Projects\Dragonfly\Dragonfly.Umbraco8\src\Dragonfly\Dragonfly.Umbraco8.xml</DocumentationFile>

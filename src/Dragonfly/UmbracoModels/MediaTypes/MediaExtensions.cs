@@ -570,24 +570,24 @@
             if (media != null && media.Content != null)
             {
                 var url = media.Url;
+                var cropInfo = media.CropData.GetCropUrl(Width, Height, true);
+                url += cropInfo;
 
-                url += "?width=" + Width;
-                url += "&height=" + Height;
+                return url;
+            }
+            else
+            {
+                return "";
+            }
+        }
 
-                var fpTop = (decimal)0.5;
-                var fpLeft = (decimal)0.5;
-                if (media.CropData != null)
-                {
-                    if (media.CropData.HasFocalPoint())
-                    {
-                        fpTop = media.CropData.FocalPoint.Top;
-                        fpLeft = media.CropData.FocalPoint.Left;
-
-                    }
-                }
-
-                url += "&center=" + fpTop + "," + fpLeft;
-                url += "&mode=crop";
+        public static string GetCropUrl(this IMediaImage media, string CropAlias)
+        {
+            if (media != null && media.Content != null)
+            {
+                var url = media.Url;
+                var cropInfo = media.CropData.GetCropUrl(CropAlias);
+                url += cropInfo;
 
                 return url;
             }
