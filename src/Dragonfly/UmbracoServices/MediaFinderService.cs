@@ -1,4 +1,4 @@
-﻿namespace Dragonfly.Umbraco7Services
+﻿namespace Dragonfly.UmbracoServices
 {
     using System.Collections.Generic;
     using System.Linq;

@@ -7,6 +7,9 @@
     using System.Web.Routing;
     using Dragonfly.UmbracoModels.MvcFakes;
 
+    /// <summary>
+    /// Helpers related to Controllers
+    /// </summary>
     public static class ApiControllerHtmlHelper
     {
         private static ControllerContext ApiControllerToMvcController(HttpControllerContext ThisControllerContext, HttpContext CurrentHttpContext)

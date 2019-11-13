@@ -12,6 +12,10 @@
     using Umbraco.Core.Services;
     using Umbraco.Web;
 
+    /// <summary>
+    /// Helpers related to Templates, Node Paths, Udis, and Getting Site Pages.
+    /// Also includes functions for manipulating HTML strings.
+    /// </summary>
     public static class Development
     {
         private const string ThisClassName = "Dragonfly.UmbracoHelpers.Development";

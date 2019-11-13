@@ -5,6 +5,9 @@
     using System.Web;
     using System.Web.SessionState;
 
+    /// <summary>
+    /// Allows for 'Faking' a Context so that certain Http functions are available outside of normal usage
+    /// </summary>
     public class FakeHttpContext : HttpContextBase
     {
         private readonly FakePrincipal _principal;
