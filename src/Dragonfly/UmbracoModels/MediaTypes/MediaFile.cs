@@ -37,6 +37,9 @@
         /// </summary>
         string Extension { get; set; }
 
+        string MediaTypeAlias { get; set; }
+
+        //ImageCropperValue CropData { get; set; }
     }
 
     /// <summary>
@@ -53,6 +56,9 @@
         public int Bytes { get; set; }
         public string Extension { get; set; }
 
+        public string MediaTypeAlias { get; set; }
+        //public ImageCropperValue CropData { get; set; }
+
         #endregion
 
         public MediaFile()
@@ -63,6 +69,8 @@
             this.Extension = "";
             this.Name = "";
             this.Url = "";
+            this.MediaTypeAlias = "";
+           // this.CropData = null;
         }
 
     }

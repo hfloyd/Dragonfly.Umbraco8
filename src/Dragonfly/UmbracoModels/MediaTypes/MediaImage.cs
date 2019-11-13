@@ -8,10 +8,11 @@
     /// </summary>
     public interface IMediaImage : IMediaFile
     {
-        ImageCropperValue CropData { get; set; }
-
+        //In addition to IMediaFile
+ 		ImageCropperValue CropData { get; set; }
         int OriginalPixelWidth { get; set; }
         int OriginalPixelHeight { get; set; }
+        
 
     }
 
@@ -29,6 +30,7 @@
         public string Url { get; set; }
         public int Bytes { get; set; }
         public string Extension { get; set; }
+        public string MediaTypeAlias { get; set; }
 
         #endregion
 

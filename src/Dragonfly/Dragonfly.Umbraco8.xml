@@ -4,6 +4,11 @@
         <name>Dragonfly.Umbraco8</name>
     </assembly>
     <members>
+        <member name="T:Dragonfly.UmbracoHelpers.ApiControllerHtmlHelper">
+            <summary>
+            Helpers related to Controllers
+            </summary>
+        </member>
         <member name="M:Dragonfly.UmbracoHelpers.ApiControllerHtmlHelper.GetPartialViewHtml(System.Web.Http.Controllers.HttpControllerContext,System.String,System.Web.Mvc.ViewDataDictionary,System.Web.HttpContext)">
             <summary>
             Gets the HTML from a partial View from a Controller
@@ -229,7 +234,7 @@
             The <see cref="T:System.Web.IHtmlString"/>.
             </returns>
         </member>
-        <member name="M:Dragonfly.UmbracoHelpers.ContentExtensions.GetSafeContent(Umbraco.Core.Models.PublishedContent.IPublishedContent,System.String,Umbraco.Web.UmbracoHelper)">
+        <member name="M:Dragonfly.UmbracoHelpers.ContentExtensions.GetSafeContent(Umbraco.Core.Models.PublishedContent.IPublishedContent,System.String)">
             <summary>
             Gets a content Id from a content picker and renders it as <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/>.
             </summary>
@@ -245,6 +250,12 @@
             <returns>
             The <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/> from the content picker.
             </returns>
+        </member>
+        <member name="T:Dragonfly.UmbracoHelpers.Development">
+            <summary>
+            Helpers related to Templates, Node Paths, Udis, and Getting Site Pages.
+            Also includes functions for manipulating HTML strings.
+            </summary>
         </member>
         <member name="M:Dragonfly.UmbracoHelpers.Development.GetTemplateAlias(System.Nullable{System.Int32})">
             <summary>
@@ -336,6 +347,37 @@
             Returns a string representation of the type for the Udi (ex: 'media' or 'document')
             </summary>
             <param name="PublishedContent">Node to get data for</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.Development.HtmlIsValid(System.String)">
+            <summary>
+            Validates string as html
+            </summary>
+            <param name="OriginalHtml"></param>
+            <returns>True if valid HTML, False if Invalid</returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.Development.HtmlIsValid(System.String,System.Collections.Generic.IEnumerable{HtmlAgilityPack.HtmlParseError}@)">
+            <summary>
+            Validates string as html, returns errors
+            </summary>
+            <param name="OriginalHtml"></param>
+            <param name="ValidationErrors">Variable of type IEnumerable&lt;HtmlParseError&gt;</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.Development.StripScripts(System.String,System.String)">
+            <summary>
+            Removes all &lt;script&gt; tags from HTML
+            </summary>
+            <param name="OriginalHtml"></param>
+            <param name="ReplaceWith">optional - text or HTML to replace the script tag with</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.Development.StripIframes(System.String,System.String)">
+            <summary>
+            Removes all &lt;iframe&gt; tags from HTML
+            </summary>
+            <param name="OriginalHtml"></param>
+            <param name="ReplaceWith">optional - text or HTML to replace the script tag with</param>
             <returns></returns>
         </member>
         <member name="M:Dragonfly.UmbracoHelpers.Dictionary.GetDictionaryOrPlaceholder(Umbraco.Web.UmbracoHelper,System.String,System.String)">
@@ -656,7 +698,20 @@
             A collection of <see cref="T:Dragonfly.UmbracoModels.IMediaImage"/>.
             </returns>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:Dragonfly.UmbracoModels.MediaExtensions.ToIMediaFile(Umbraco.Core.Models.PublishedContent.IPublishedContent)" -->
+        <member name="T:Dragonfly.UmbracoModels.MediaExtensions">
+            <summary>
+            Extensions to IMediaFile and IMediaImage
+            </summary>
+        </member>
+        <member name="M:Dragonfly.UmbracoModels.MediaExtensions.ToIMediaFile(Umbraco.Core.Models.PublishedContent.IPublishedContent)">
+            <summary>
+            Utility extension to convert <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/> to an <see cref="T:Dragonfly.UmbracoModels.MediaFile"/>
+            </summary>
+            <param name="MediaContent">The <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/></param>
+            <returns>
+            The <see cref="T:Dragonfly.UmbracoModels.MediaFile"/>.
+            </returns>
+        </member>
         <member name="M:Dragonfly.UmbracoModels.MediaExtensions.ToIMediaFiles(System.Collections.Generic.IEnumerable{Umbraco.Core.Models.PublishedContent.IPublishedContent})">
             <summary>
             Creates a collection of <see cref="T:Dragonfly.UmbracoModels.MediaFile"/> from a list of <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/> (media)
@@ -694,6 +749,13 @@
             <returns>
             The <see cref="T:Dragonfly.UmbracoModels.MediaImage"/>.
             </returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoModels.MediaExtensions.AddFileInfoFromServer(Dragonfly.UmbracoModels.MediaImage)">
+            <summary>
+            Adds Bytes, Extension, and Dimensions information from the actual file
+            </summary>
+            <param name="MediaImage"></param>
+            <returns></returns>
         </member>
         <member name="M:Dragonfly.UmbracoModels.MediaExtensions.GetSafeMediaFile(Umbraco.Core.Models.PublishedContent.IPublishedContent,Umbraco.Web.UmbracoHelper,System.String)">
             <summary>
@@ -933,6 +995,11 @@
             Represents an image from the Media section of Umbraco
             </summary>
         </member>
+        <member name="T:Dragonfly.UmbracoModels.MvcFakes.FakeHttpContext">
+            <summary>
+            Allows for 'Faking' a Context so that certain Http functions are available outside of normal usage
+            </summary>
+        </member>
         <member name="T:Dragonfly.UmbracoModels.ILink">
             <summary>
             Defines a hyperlink
@@ -1065,13 +1132,13 @@
             Gets or sets the children <see cref="T:Dragonfly.UmbracoModels.ILinkTier"/>
             </summary>
         </member>
-        <member name="M:Dragonfly.Umbraco7Services.MediaFinderService.#ctor(Umbraco.Web.UmbracoHelper)">
+        <member name="M:Dragonfly.UmbracoServices.MediaFinderService.#ctor(Umbraco.Web.UmbracoHelper)">
             <summary>
             Service to retrieve Media Nodes via various search methods
             </summary>
             <param name="umbHelper">UmbracoHelper passed-in</param>
         </member>
-        <member name="M:Dragonfly.Umbraco7Services.MediaFinderService.GetImageByName(System.String,System.Int32)">
+        <member name="M:Dragonfly.UmbracoServices.MediaFinderService.GetImageByName(System.String,System.Int32)">
             <summary>
             Lookup Media Image by Node Name
             </summary>
@@ -1079,7 +1146,7 @@
             <param name="StartNodeId">ID of MediaNode to limit search to descendants</param>
             <returns></returns>
         </member>
-        <member name="M:Dragonfly.Umbraco7Services.MediaFinderService.GetFolderByName(System.String,System.Int32)">
+        <member name="M:Dragonfly.UmbracoServices.MediaFinderService.GetFolderByName(System.String,System.Int32)">
             <summary>
             Lookup Media Folder by Node Name
             </summary>
@@ -1087,7 +1154,7 @@
             <param name="StartNodeId">ID of MediaNode to limit search to descendants</param>
             <returns></returns>
         </member>
-        <member name="M:Dragonfly.Umbraco7Services.MediaFinderService.GetFileByName(System.String,System.Int32)">
+        <member name="M:Dragonfly.UmbracoServices.MediaFinderService.GetFileByName(System.String,System.Int32)">
             <summary>
             Lookup Media File by Node Name
             </summary>
@@ -1095,7 +1162,7 @@
             <param name="StartNodeId">ID of MediaNode to limit search to descendants</param>
             <returns></returns>
         </member>
-        <member name="M:Dragonfly.Umbraco7Services.MediaFinderService.GetMediaByName(System.String,System.Int32,System.String)">
+        <member name="M:Dragonfly.UmbracoServices.MediaFinderService.GetMediaByName(System.String,System.Int32,System.String)">
             <summary>
             Lookup Media Node by Node Name
             </summary>
@@ -1104,7 +1171,7 @@
             <param name="MediaTypeAlias">Alias of MediaType to return</param>
             <returns></returns>
         </member>
-        <member name="M:Dragonfly.Umbraco7Services.MediaFinderService.GetImageByFilePath(System.String,System.Int32)">
+        <member name="M:Dragonfly.UmbracoServices.MediaFinderService.GetImageByFilePath(System.String,System.Int32)">
             <summary>
             Lookup Media Image by File Path
             </summary>
@@ -1112,7 +1179,7 @@
             <param name="StartNodeId">ID of MediaNode to limit search to descendants</param>
             <returns></returns>
         </member>
-        <member name="M:Dragonfly.Umbraco7Services.MediaFinderService.GetFileByFilePath(System.String,System.Int32)">
+        <member name="M:Dragonfly.UmbracoServices.MediaFinderService.GetFileByFilePath(System.String,System.Int32)">
             <summary>
             Lookup Media File by File Path
             </summary>
@@ -1120,7 +1187,7 @@
             <param name="StartNodeId">ID of MediaNode to limit search to descendants</param>
             <returns></returns>
         </member>
-        <member name="M:Dragonfly.Umbraco7Services.MediaFinderService.GetMediaByFilePath(System.String,System.Int32,System.String)">
+        <member name="M:Dragonfly.UmbracoServices.MediaFinderService.GetMediaByFilePath(System.String,System.Int32,System.String)">
             <summary>
             Lookup Media Node by File Path
             </summary>

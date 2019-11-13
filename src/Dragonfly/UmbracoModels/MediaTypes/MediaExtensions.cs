@@ -10,7 +10,9 @@
     using Umbraco.Core.PropertyEditors.ValueConverters;
     using Umbraco.Web;
 
-
+    /// <summary>
+    /// Extensions to IMediaFile and IMediaImage
+    /// </summary>
     public static class MediaExtensions
     {
         private const string ThisClassName = "Dragonfly.UmbracoModels.MediaExtensions";
@@ -20,23 +22,37 @@
         /// <summary>
         /// Utility extension to convert <see cref="IPublishedContent"/> to an <see cref="MediaFile"/>
         /// </summary>
-        /// <param name="MediaContent"></param>
-        /// The <see cref="IPublishedContent"/>
-        /// </param>
+        /// <param name="MediaContent">The <see cref="IPublishedContent"/></param>
         /// <returns>
         /// The <see cref="MediaFile"/>.
         /// </returns>
         public static IMediaFile ToIMediaFile(this IPublishedContent MediaContent)
         {
-            return new MediaFile()
+            var mf = new MediaFile()
             {
                 Content = MediaContent,
+                MediaTypeAlias = MediaContent.ContentType.Alias,
                 Id = MediaContent.Id,
                 Bytes = MediaContent.GetSafeInt("umbracoBytes", 0),
                 Extension = MediaContent.GetSafeString("umbracoExtension"),
-                Url = MediaContent.GetSafeString("umbracoFile"), //MediaContent.Url,
                 Name = MediaContent.Name
             };
+
+            var urlVal = MediaContent.GetSafeString("umbracoFile");
+            if (urlVal.StartsWith("{"))
+            {
+                //JSON crop info - extract base file url
+                var cropper = Newtonsoft.Json.JsonConvert.DeserializeObject<ImageCropperValue>(urlVal);
+               // mf.CropData = cropper;
+                mf.Url = cropper.Src;
+            }
+            else
+            {
+                mf.Url = urlVal;
+             //   mf.CropData = null;
+            }
+
+            return mf;
         }
 
         /// <summary>
@@ -85,12 +101,11 @@
             var img = new MediaImage()
             {
                 Content = MediaContent,
+                MediaTypeAlias = MediaContent.ContentType.Alias,
                 Id = MediaContent.Id,
                 Bytes = MediaContent.GetSafeInt("umbracoBytes", 0),
                 Extension = MediaContent.GetSafeString("umbracoExtension"),
                 Name = MediaContent.Name,
-                //ImageAltText = altText,
-                //ImageAltDictionaryKey = AltDictionary != "" ? AltDictionary : MediaContent.GetSafeString("ImageAltDictionaryKey"),
                 OriginalPixelWidth = MediaContent.GetSafeInt("umbracoWidth", 0),
                 OriginalPixelHeight = MediaContent.GetSafeInt("umbracoHeight", 0)
             };
@@ -103,27 +118,11 @@
                 var urlDataCropSet = urlDataObj as ImageCropperValue;
                 img.Url = urlDataCropSet.Src;
                 img.CropData = urlDataCropSet;
-
-                //if (urlDataCropSet.HasFocalPoint())
-                //{
-                //    img.HasFocalPoint = true;
-                //    img.FocalPointLeft = Convert.ToDouble(urlDataCropSet.FocalPoint.Left);
-                //    img.FocalPointTop = Convert.ToDouble(urlDataCropSet.FocalPoint.Top);
-                //}
-                //else
-                //{
-                //    img.HasFocalPoint = false;
-                //    img.FocalPointLeft = 0;
-                //    img.FocalPointTop = 0;
-                //}
             }
-
             else
             {
                 img.Url = urlDataObj.ToString();
-                //img.JsonCropData = null;
-                //img.FocalPointLeft = 0;
-                //img.FocalPointTop = 0;
+                img.CropData = null;
             }
 
             return img;
@@ -166,6 +165,11 @@
             return img;
         }
 
+        /// <summary>
+        /// Adds Bytes, Extension, and Dimensions information from the actual file
+        /// </summary>
+        /// <param name="MediaImage"></param>
+        /// <returns></returns>
         private static MediaImage AddFileInfoFromServer(MediaImage MediaImage)
         {
             if (MediaImage.Url != "")
@@ -250,7 +254,7 @@
             }
             else
             {
-                var mediaContent = Content.GetSafeMultiContent(PropertyAlias, Umbraco).ToArray();
+                var mediaContent = Content.GetSafeMultiContent(PropertyAlias).ToArray();
 
                 if (mediaContent.Any())
                 {
@@ -292,7 +296,7 @@
         /// </returns>
         public static IEnumerable<IMediaFile> GetSafeMediaFiles(this IPublishedContent Content, string PropertyAlias, UmbracoHelper Umbraco)
         {
-            var mediaContent = Content.GetSafeMultiContent(PropertyAlias, Umbraco).ToArray();
+            var mediaContent = Content.GetSafeMultiContent(PropertyAlias).ToArray();
 
             if (mediaContent.Any())
             {
@@ -325,7 +329,7 @@
         /// </returns>
         public static IEnumerable<IMediaFile> GetSafeMediaFiles(this IPublishedContent Content, string PropertyAlias, UmbracoHelper Umbraco, IMediaFile DefaultFile)
         {
-            var mediaContent = Content.GetSafeMultiContent(PropertyAlias, Umbraco).ToArray();
+            var mediaContent = Content.GetSafeMultiContent(PropertyAlias).ToArray();
 
             if (mediaContent.Any())
             {
@@ -420,7 +424,7 @@
                 //}
                 else
                 {
-                    var mediaContent = Content.GetSafeMultiContent(PropertyAlias, Umbraco).ToArray();
+                    var mediaContent = Content.GetSafeMultiContent(PropertyAlias).ToArray();
 
                     if (mediaContent.Any())
                     {
@@ -470,7 +474,7 @@
         /// </returns>
         public static IEnumerable<IMediaImage> GetSafeImages(this IPublishedContent Content, string PropertyAlias, UmbracoHelper Umbraco, IMediaImage DefaultImage)
         {
-            var mediaContent = Content.GetSafeMultiContent(PropertyAlias, Umbraco).ToArray();
+            var mediaContent = Content.GetSafeMultiContent(PropertyAlias).ToArray();
 
             if (mediaContent.Any())
             {
@@ -511,7 +515,7 @@
         /// </returns>
         public static IEnumerable<IMediaImage> GetSafeImages(this IPublishedContent Content, string PropertyAlias, UmbracoHelper Umbraco)
         {
-            var mediaContent = Content.GetSafeMultiContent(PropertyAlias, Umbraco).ToArray();
+            var mediaContent = Content.GetSafeMultiContent(PropertyAlias).ToArray();
 
             if (mediaContent.Any())
             {
