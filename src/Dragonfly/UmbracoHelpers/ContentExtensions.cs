@@ -457,14 +457,18 @@
         /// <returns>
         /// The <see cref="IPublishedContent"/> from the content picker.
         /// </returns>
-        public static IPublishedContent GetSafeContent(this IPublishedContent Content, string PropertyAlias, UmbracoHelper Umbraco)
+        public static IPublishedContent GetSafeContent(this IPublishedContent Content, string PropertyAlias)
         {
-            return Content.HasPropertyWithValue(PropertyAlias)
-                       ? Umbraco.Content(Content.Value(PropertyAlias))
-                       : null;
+            if (Content.HasPropertyWithValue(PropertyAlias))
+            {
+                var iPub = Content.Value<IPublishedContent>(PropertyAlias);
+                return iPub;
+            }
+            else
+            { return null; }
         }
 
-        public static IEnumerable<IPublishedContent> GetSafeMultiContent(this IPublishedContent Content, string PropertyAlias, UmbracoHelper Umbraco)
+        public static IEnumerable<IPublishedContent> GetSafeMultiContent(this IPublishedContent Content, string PropertyAlias)
         {
             if (Content.HasPropertyWithValue(PropertyAlias))
             {
@@ -550,6 +554,26 @@
                 {
                     var safeVal = Content.GetSafeBool(propertyAlias, defaultVal);
                     if (safeVal != defaultVal)
+                    {
+                        returnVal = safeVal;
+                        flag = false;
+                    }
+                }
+            }
+            return returnVal;
+        }
+
+        public static IPublishedContent GetFirstMatchingPropValueContent(this IPublishedContent Content, IEnumerable<string> PropsToTest)
+        {
+            var defaultVal = 0;
+            IPublishedContent returnVal = null;
+            bool flag = true;
+            foreach (string propertyAlias in PropsToTest)
+            {
+                if (flag)
+                {
+                    var safeVal = Content.GetSafeContent(propertyAlias);
+                    if (safeVal != null)
                     {
                         returnVal = safeVal;
                         flag = false;
