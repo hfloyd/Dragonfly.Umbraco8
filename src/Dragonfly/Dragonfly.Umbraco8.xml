@@ -272,6 +272,7 @@
             <summary>
             Return the first descendant page in the site by its DocType
             </summary>
+            <param name="UmbHelper">UmbracoHelper</param>
             <param name="SiteRootNodeId">ex: model.Site.Id</param>
             <param name="DoctypeAlias">Name of the Doctype to serach for</param>
             <returns>An IPublishedContent of the node, or NULL if not found. You can then cast to a strongly-typed model for the DocType (ex: new ContactUsPage(contactPage))</returns>
@@ -280,6 +281,7 @@
             <summary>
             Returns all descendant pages in the site of a specified DocType
             </summary>
+            <param name="UmbHelper">UmbracoHelper</param>
             <param name="SiteRootNodeId">ex: model.Site.Id</param>
             <param name="DoctypeAlias">Name of the Doctype to serach for</param>
             <returns>An IEnumerable&lt;IPublishedContent&gt; of the nodes, or empty list if not found.</returns>
@@ -337,7 +339,7 @@
             <summary>
             Converts an IPublishedContent to a UDI string suitable for using with the content service
             </summary>
-            <param name="Pub">Node to use</param>
+            <param name="PublishedContent">Node to use</param>
             <param name="UdiType">UDI Type to use (document, media, etc) (use 'Umbraco.Core.Constants.UdiEntityType.' to specify)
             If excluded, will try to use the DocTypeAlias to determine the UDI Type</param>
             <returns></returns>
@@ -372,12 +374,44 @@
             <param name="ReplaceWith">optional - text or HTML to replace the script tag with</param>
             <returns></returns>
         </member>
+        <member name="M:Dragonfly.UmbracoHelpers.Development.StripScripts(System.Web.IHtmlString,System.String)">
+            <summary>
+            Removes all &lt;script&gt; tags from HTML
+            </summary>
+            <param name="OriginalHtml"></param>
+            <param name="ReplaceWith">optional - text or HTML to replace the script tag with</param>
+            <returns></returns>
+        </member>
         <member name="M:Dragonfly.UmbracoHelpers.Development.StripIframes(System.String,System.String)">
             <summary>
             Removes all &lt;iframe&gt; tags from HTML
             </summary>
             <param name="OriginalHtml"></param>
             <param name="ReplaceWith">optional - text or HTML to replace the script tag with</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.Development.StripIframes(System.Web.IHtmlString,System.String)">
+            <summary>
+            Removes all &lt;iframe&gt; tags from HTML
+            </summary>
+            <param name="OriginalHtml"></param>
+            <param name="ReplaceWith">optional - text or HTML to replace the script tag with</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.Development.StripParagraphTags(System.String,System.Boolean)">
+            <summary>
+            Removes all &lt;p&gt; tags from HTML
+            </summary>
+            <param name="OriginalHtml"></param>
+            <param name="ReplaceWithBr">optional - if there are multiple paragraphs, will put a &lt;br/&gt; tag between them</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.Development.StripParagraphTags(System.Web.IHtmlString,System.Boolean)">
+            <summary>
+            Removes all &lt;p&gt; tags from HTML
+            </summary>
+            <param name="OriginalHtml"></param>
+            <param name="ReplaceWithBr">optional - if there are multiple paragraphs, will put a &lt;br/&gt; tag between them</param>
             <returns></returns>
         </member>
         <member name="M:Dragonfly.UmbracoHelpers.Dictionary.GetDictionaryOrPlaceholder(Umbraco.Web.UmbracoHelper,System.String,System.String)">
@@ -436,6 +470,11 @@
             </summary>
             <param name="Html"></param>
             <returns></returns>
+        </member>
+        <member name="T:Dragonfly.UmbracoHelpers.Macros">
+            <summary>
+            Provides Functionality useful for Macros
+            </summary>
         </member>
         <member name="M:Dragonfly.UmbracoHelpers.Macros.GetSafeParamObject(System.Collections.Generic.IDictionary{System.String,System.Object},System.String,System.Object)">
             <summary>
@@ -501,9 +540,27 @@
             <param name="UmbracoHelper">ex: 'Umbraco'</param>
             <returns>IPublishedContent or NULL</returns>
         </member>
+        <member name="M:Dragonfly.UmbracoHelpers.Macros.GetSafeParamMultiMedia(System.Collections.Generic.IDictionary{System.String,System.Object},System.String,Umbraco.Web.UmbracoHelper)">
+            <summary>
+            Returns a collection of IPublishedContent from a MultiMediaPicker Macro Parameter
+            </summary>
+            <param name="MacrosCollection">ex: 'Model.MacroParameters'</param>
+            <param name="Key">Parameter alias</param>
+            <param name="UmbracoHelper">ex: 'Umbraco'</param>
+            <returns>IEnumerable&lt;IPublishedContent&gt;</returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoHelpers.Macros.GetSafeParamMedia(System.Collections.Generic.IDictionary{System.String,System.Object},System.String,Umbraco.Web.UmbracoHelper)">
+            <summary>
+            Returns an IPublishedContent from a MediaPicker Macro Parameter
+            </summary>
+            <param name="MacrosCollection">ex: 'Model.MacroParameters'</param>
+            <param name="Key">Parameter alias</param>
+            <param name="UmbracoHelper">ex: 'Umbraco'</param>
+            <returns>IPublishedContent or NULL</returns>
+        </member>
         <member name="M:Dragonfly.UmbracoHelpers.Macros.GetSafeParamMediaContent(System.Collections.Generic.IDictionary{System.String,System.Object},System.String,Umbraco.Web.UmbracoHelper)">
             <summary>
-            Returns an IPublishedContent from a ContentPicker Macro Parameter
+            Returns an IPublishedContent from a MediaPicker Macro Parameter
             </summary>
             <param name="MacrosCollection">ex: 'Model.MacroParameters'</param>
             <param name="Key">Parameter alias</param>
@@ -922,7 +979,7 @@
             </summary>
             <param name="Height">Pixel Height (use zero to exclude value)</param>
             <param name="Width">Pixel Width (use zero to exclude value)</param>
-            <param name="BgColorForPadding">Hex code for color used to fill background, since there is no up-sizing. Example: "#FFFFFF"</param>
+            <param name="BgColorForPadding">Hex code for color used to fill background, since there is no up-sizing. Example: "#FFFFFF" Exclude when only using one dimension for resizing</param>
             <param name="AdditionalParameters">List of Key/Value Pairs of additional ImageProcessor options</param>
             <returns></returns>
         </member>

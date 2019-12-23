@@ -602,15 +602,15 @@
         /// </summary>
         /// <param name="Height">Pixel Height (use zero to exclude value)</param>
         /// <param name="Width">Pixel Width (use zero to exclude value)</param>
-        /// <param name="BgColorForPadding">Hex code for color used to fill background, since there is no up-sizing. Example: "#FFFFFF"</param>
+        /// <param name="BgColorForPadding">Hex code for color used to fill background, since there is no up-sizing. Example: "#FFFFFF" Exclude when only using one dimension for resizing</param>
         /// <param name="AdditionalParameters">List of Key/Value Pairs of additional ImageProcessor options</param>
         /// <returns></returns>
-        public static string GetResizeUrl(this IMediaImage media, int Width, int Height, string BgColorForPadding, IEnumerable<KeyValuePair<string, string>> AdditionalParameters = null)
+        public static string GetResizeUrl(this IMediaImage media, int Width, int Height, string BgColorForPadding = "", IEnumerable<KeyValuePair<string, string>> AdditionalParameters = null)
         {
             if (media != null && media.Content != null)
             {
                 var baseUrl = media.Url;
-                var bgColor = BgColorForPadding.Replace("#", "");
+                var urlBgColor = BgColorForPadding != ""? ("&bgcolor="+ BgColorForPadding.Replace("#", "")) :"";
 
                 var dimensions = "";
                 if (Width > 0 & Height > 0)
@@ -636,7 +636,7 @@
                     }
                 }
 
-                var url = $"{baseUrl}?{dimensions}&upscale=false&bgcolor={bgColor}{additionalParams}";
+                var url = $"{baseUrl}?{dimensions}&upscale=false{urlBgColor}{additionalParams}";
 
                 return url;
             }

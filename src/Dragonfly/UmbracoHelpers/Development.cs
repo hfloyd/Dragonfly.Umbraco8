@@ -1,9 +1,10 @@
 ﻿namespace Dragonfly.UmbracoHelpers
 {
+    using HtmlAgilityPack;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using HtmlAgilityPack;
+    using System.Web;
     using Umbraco.Core;
     using Umbraco.Core.Composing;
     using Umbraco.Core.Logging;
@@ -54,6 +55,7 @@
         /// <summary>
         /// Return the first descendant page in the site by its DocType
         /// </summary>
+        /// <param name="UmbHelper">UmbracoHelper</param>
         /// <param name="SiteRootNodeId">ex: model.Site.Id</param>
         /// <param name="DoctypeAlias">Name of the Doctype to serach for</param>
         /// <returns>An IPublishedContent of the node, or NULL if not found. You can then cast to a strongly-typed model for the DocType (ex: new ContactUsPage(contactPage))</returns>
@@ -75,6 +77,7 @@
         /// <summary>
         /// Returns all descendant pages in the site of a specified DocType
         /// </summary>
+        /// <param name="UmbHelper">UmbracoHelper</param>
         /// <param name="SiteRootNodeId">ex: model.Site.Id</param>
         /// <param name="DoctypeAlias">Name of the Doctype to serach for</param>
         /// <returns>An IEnumerable&lt;IPublishedContent&gt; of the nodes, or empty list if not found.</returns>
@@ -293,7 +296,7 @@
         /// <summary>
         /// Converts an IPublishedContent to a UDI string suitable for using with the content service
         /// </summary>
-        /// <param name="Pub">Node to use</param>
+        /// <param name="PublishedContent">Node to use</param>
         /// <param name="UdiType">UDI Type to use (document, media, etc) (use 'Umbraco.Core.Constants.UdiEntityType.' to specify)
         /// If excluded, will try to use the DocTypeAlias to determine the UDI Type</param>
         /// <returns></returns>
@@ -422,6 +425,21 @@
                 return "";
             }
         }
+
+        /// <summary>
+        /// Removes all &lt;script&gt; tags from HTML
+        /// </summary>
+        /// <param name="OriginalHtml"></param>
+        /// <param name="ReplaceWith">optional - text or HTML to replace the script tag with</param>
+        /// <returns></returns>
+        public static IHtmlString StripScripts(this IHtmlString OriginalHtml, string ReplaceWith = "")
+        {
+            var originalHtml = OriginalHtml.ToString();
+            var finalHtml = originalHtml.StripScripts(ReplaceWith);
+
+            return new HtmlString(finalHtml);
+        }
+
         /// <summary>
         /// Removes all &lt;iframe&gt; tags from HTML
         /// </summary>
@@ -468,6 +486,86 @@
             {
                 return "";
             }
+        }
+        
+        /// <summary>
+        /// Removes all &lt;iframe&gt; tags from HTML
+        /// </summary>
+        /// <param name="OriginalHtml"></param>
+        /// <param name="ReplaceWith">optional - text or HTML to replace the script tag with</param>
+        /// <returns></returns>
+        public static IHtmlString StripIframes(this IHtmlString OriginalHtml, string ReplaceWith = "")
+        {
+            var originalHtml = OriginalHtml.ToString();
+            var finalHtml = originalHtml.StripIframes(ReplaceWith);
+
+            return new HtmlString(finalHtml);
+        }
+
+        /// <summary>
+        /// Removes all &lt;p&gt; tags from HTML
+        /// </summary>
+        /// <param name="OriginalHtml"></param>
+        /// <param name="ReplaceWithBr">optional - if there are multiple paragraphs, will put a &lt;br/&gt; tag between them</param>
+        /// <returns></returns>
+        public static string StripParagraphTags(this string OriginalHtml, bool ReplaceWithBr = true)
+        {
+            if (!OriginalHtml.IsNullOrWhiteSpace())
+            {
+                HtmlDocument doc = new HtmlDocument();
+
+                doc.LoadHtml(OriginalHtml);
+
+                var badNodes = doc.DocumentNode.SelectNodes("//p");
+                
+                if (badNodes!=null && badNodes.Any())
+                {
+                    var totalParagraphs = badNodes.Count;
+
+                    foreach (var node in badNodes)
+                    {
+                        var innerText = node.InnerText;
+                        var newHtml = "";
+                        var isLastParagraph = badNodes.IndexOf(node) == (totalParagraphs - 1);
+
+                        if (ReplaceWithBr & totalParagraphs > 1 & !isLastParagraph)
+                        {
+                            newHtml = $"{innerText}<br/>";
+                        }
+                        else
+                        {
+                            newHtml = $"{innerText}";
+                        }
+
+                        HtmlNode replacementNode = HtmlNode.CreateNode(newHtml);
+                        doc.DocumentNode.ReplaceChild(replacementNode, node);
+                    }
+                    return doc.DocumentNode.InnerHtml.ToString();
+                }
+                else
+                {
+                    //Nothing to remove, just return original
+                    return OriginalHtml;
+                }
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+        /// <summary>
+        /// Removes all &lt;p&gt; tags from HTML
+        /// </summary>
+        /// <param name="OriginalHtml"></param>
+        /// <param name="ReplaceWithBr">optional - if there are multiple paragraphs, will put a &lt;br/&gt; tag between them</param>
+        /// <returns></returns>
+        public static IHtmlString StripParagraphTags(this IHtmlString OriginalHtml, bool ReplaceWithBr = true)
+        {
+            var originalHtml = OriginalHtml.ToString();
+            var finalHtml = originalHtml.StripParagraphTags(ReplaceWithBr);
+
+            return new HtmlString(finalHtml);
         }
 
         #endregion
