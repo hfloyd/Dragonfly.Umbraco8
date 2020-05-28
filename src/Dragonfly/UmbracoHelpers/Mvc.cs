@@ -109,16 +109,15 @@
         {
             var path = ThisRequestUrl.AbsolutePath;
 
-            if (path.Contains("GetMacroResultAsHtmlForEditor"))
+            if (path.Contains("GetMacroResultAsHtmlForEditor")
+                || path.Contains("GetPartialViewResultAsHtmlForEditor")
+                || path.Contains("umbraco#/content")
+                || path.Contains("umbraco/backoffice")
+                )
             {
                 return true;
             }
-
-            if (path.Contains("GetPartialViewResultAsHtmlForEditor"))
-            {
-                return true;
-            }
-
+            
             return false;
         }
 
@@ -135,7 +134,7 @@
             //        "<script>$(document).ready(function () {{ window.open( '{0}' );}});</script>",
             //        url);
 
-            return string.Format("<script> window.open( \"{0}\" );</script>", Url);
+            return $"<script> window.open( \"{Url}\" );</script>";
         }
     }
 }
