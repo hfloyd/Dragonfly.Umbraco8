@@ -335,6 +335,15 @@
             If excluded, will try to use the DocTypeAlias to determine the UDI Type</param>
             <returns>A CSV string of UID values eg. umb://document/56c0f0ef0ac74b58ae1cce16db1476af,umb://document/5cbac9249ffa4f5ab4f5e0db1599a75b</returns>
         </member>
+        <member name="M:Dragonfly.UmbracoHelpers.Development.ToUdi(Umbraco.Core.Models.PublishedContent.IPublishedContent,System.String)">
+            <summary>
+            Converts an IPublishedContent to a UDI string suitable for using with the content service
+            </summary>
+            <param name="PublishedContent">Node to use</param>
+            <param name="UdiType">UDI Type to use (document, media, etc) (use 'Umbraco.Core.Constants.UdiEntityType.' to specify)
+            If excluded, will try to use the PublishedItemType to determine the UDI Type</param>
+            <returns></returns>
+        </member>
         <member name="M:Dragonfly.UmbracoHelpers.Development.ToUdiString(Umbraco.Core.Models.PublishedContent.IPublishedContent,System.String)">
             <summary>
             Converts an IPublishedContent to a UDI string suitable for using with the content service
@@ -1189,11 +1198,23 @@
             Gets or sets the children <see cref="T:Dragonfly.UmbracoModels.ILinkTier"/>
             </summary>
         </member>
-        <member name="M:Dragonfly.UmbracoServices.MediaFinderService.#ctor(Umbraco.Web.UmbracoHelper)">
+        <member name="M:Dragonfly.UmbracoServices.MediaFinderService.#ctor(Umbraco.Web.UmbracoHelper,Umbraco.Core.Logging.ILogger)">
             <summary>
             Service to retrieve Media Nodes via various search methods
             </summary>
             <param name="umbHelper">UmbracoHelper passed-in</param>
+        </member>
+        <member name="M:Dragonfly.UmbracoServices.MediaFinderService.GetAllSimpleMediaNodes">
+            <summary>
+            Gets all media nodes as SimpleMediaInfo
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoServices.MediaFinderService.GetAllSimpleMediaNodes(System.Int32)">
+            <summary>
+            Gets all media nodes as SimpleMediaInfo
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:Dragonfly.UmbracoServices.MediaFinderService.GetImageByName(System.String,System.Int32)">
             <summary>
@@ -1245,6 +1266,31 @@
             <returns></returns>
         </member>
         <member name="M:Dragonfly.UmbracoServices.MediaFinderService.GetMediaByFilePath(System.String,System.Int32,System.String)">
+            <summary>
+            Lookup Media Node by File Path
+            </summary>
+            <param name="MediaFilePath">File Path to search for</param>
+            <param name="StartNodeId">ID of MediaNode to limit search to descendants</param>
+            <param name="MediaTypeAlias">Alias of MediaType to return</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoServices.MediaFinderService.GetImageInfoByFilename(System.String,System.Int32)">
+            <summary>
+            Lookup Media Image by File Path
+            </summary>
+            <param name="MediaFilePath">File Path to search for</param>
+            <param name="StartNodeId">ID of MediaNode to limit search to descendants</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoServices.MediaFinderService.GetFileInfoByFilename(System.String,System.Int32)">
+            <summary>
+            Lookup Media File by File Path
+            </summary>
+            <param name="MediaFilePath">File Path to search for</param>
+            <param name="StartNodeId">ID of MediaNode to limit search to descendants</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dragonfly.UmbracoServices.MediaFinderService.GetMediaInfoByFilename(System.String,System.Int32,System.String)">
             <summary>
             Lookup Media Node by File Path
             </summary>

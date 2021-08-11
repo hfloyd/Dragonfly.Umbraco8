@@ -298,15 +298,35 @@
         /// </summary>
         /// <param name="PublishedContent">Node to use</param>
         /// <param name="UdiType">UDI Type to use (document, media, etc) (use 'Umbraco.Core.Constants.UdiEntityType.' to specify)
+        /// If excluded, will try to use the PublishedItemType to determine the UDI Type</param>
+        /// <returns></returns>
+        public static Udi ToUdi(this IPublishedContent PublishedContent, string UdiType = "")
+        {
+            if (PublishedContent != null)
+            {
+                var udiType = UdiType != "" ? UdiType : GetUdiType(PublishedContent);
+                var udi = Udi.Create(udiType, PublishedContent.Key);
+                return udi;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Converts an IPublishedContent to a UDI string suitable for using with the content service
+        /// </summary>
+        /// <param name="PublishedContent">Node to use</param>
+        /// <param name="UdiType">UDI Type to use (document, media, etc) (use 'Umbraco.Core.Constants.UdiEntityType.' to specify)
         /// If excluded, will try to use the DocTypeAlias to determine the UDI Type</param>
         /// <returns></returns>
         public static string ToUdiString(this IPublishedContent PublishedContent, string UdiType = "")
         {
             if (PublishedContent != null)
             {
-                var udiType = UdiType != "" ? UdiType : GetUdiType(PublishedContent);
-                var udi = Udi.Create(udiType, PublishedContent.Key);
-                return udi.ToString();
+                var udi = PublishedContent.ToUdi(UdiType);
+                return udi != null? udi.ToString():"";
             }
             else
             {
