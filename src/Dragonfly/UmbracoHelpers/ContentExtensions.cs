@@ -422,6 +422,17 @@
 
         #region IPublishedContent Properties
 
+        public static T GetSafePropertyValue<T>(this IPublishedContent Content, string PropertyAlias)
+        {
+            if (Content.HasPropertyWithValue(PropertyAlias))
+            {
+                var value = Content.Value<T>(PropertyAlias);
+                return value;
+            }
+            else
+            { return default(T); }
+        }
+
         ///// <summary>
         ///// Gets a content Id from a content picker and renders it as <see cref="IPublishedContent"/>.
         ///// </summary>
@@ -483,6 +494,26 @@
         #endregion
 
         #region Get First Matching Property Value
+
+        public static T GetFirstMatchingPropValue<T>(this IPublishedContent Content, IEnumerable<string> PropsToTest)
+        {
+            T returnVal = default(T);
+            bool flag = true;
+            foreach (string propertyAlias in PropsToTest)
+            {
+                if (flag)
+                {
+                    var safeVal = Content.GetSafePropertyValue<T>(propertyAlias);
+                    var hasNoValue = EqualityComparer<T>.Default.Equals(safeVal, returnVal);
+                    if (!hasNoValue)
+                    {
+                        returnVal = safeVal;
+                        flag = false;
+                    }
+                }
+            }
+            return returnVal;
+        }
 
         public static string GetFirstMatchingPropValueString(this IPublishedContent Content, IEnumerable<string> PropsToTest)
         {
