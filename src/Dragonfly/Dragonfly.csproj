@@ -15,10 +15,10 @@
     <PackageId>Dragonfly.Umbraco8</PackageId>
     <AssemblyName>Dragonfly.Umbraco8</AssemblyName>
     <RootNamespace>Dragonfly</RootNamespace>
-    <Version>0.14.0</Version>
-    <AssemblyVersion>0.14.0</AssemblyVersion>
-    <FileVersion>0.14.0</FileVersion>
-    <PackageReleaseNotes>Added GetFirstMatchingPropValue&lt;T&gt;() and GetSafePropertyValue&lt;T&gt;()</PackageReleaseNotes>
+    <Version>0.15.0</Version>
+    <AssemblyVersion>0.15.0</AssemblyVersion>
+    <FileVersion>0.15.0</FileVersion>
+    <PackageReleaseNotes>Enhancement</PackageReleaseNotes>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>C:\Users\Heather\NAS Folders\Active Projects\Webs\~Code Projects\Dragonfly\Dragonfly.Umbraco8\src\Dragonfly\Dragonfly.Umbraco8.xml</DocumentationFile>
@@ -51,4 +51,8 @@
   </ItemGroup>
 
   <Import Project="..\Custom.targets" />
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="REM XCOPY /y &quot;$(TargetDir)$(TargetName)*.*&quot; &quot;\bin\&quot;&#xD;&#xA;XCOPY /y &quot;$(TargetDir)$(TargetName)*.*&quot; &quot;C:\Users\Heather\NAS Folders\Active Projects\Webs\Clients\GHXL\sourcecode\Ghx.Web\bin\&quot;" />
+  </Target>
 </Project>

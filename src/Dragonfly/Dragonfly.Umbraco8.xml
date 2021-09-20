@@ -234,6 +234,16 @@
             The <see cref="T:System.Web.IHtmlString"/>.
             </returns>
         </member>
+        <member name="M:Dragonfly.UmbracoHelpers.ContentExtensions.GetSafePropertyValue``1(Umbraco.Core.Models.PublishedContent.IPublishedContent,System.String,``0)">
+            <summary>
+            Checks if a property exists and has a value, returns the default for the type if not 
+            </summary>
+            <param name="Content">Node to get the property value from</param>
+            <param name="PropertyAlias">Alias of the property</param>
+            <param name="DefaultIfNone">Value to return if missing from Node (default is the Type default - ex: 0, false, "", null, etc.)</param>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
         <member name="M:Dragonfly.UmbracoHelpers.ContentExtensions.GetSafeContent(Umbraco.Core.Models.PublishedContent.IPublishedContent,System.String)">
             <summary>
             Gets a content Id from a content picker and renders it as <see cref="T:Umbraco.Core.Models.PublishedContent.IPublishedContent"/>.

@@ -422,7 +422,15 @@
 
         #region IPublishedContent Properties
 
-        public static T GetSafePropertyValue<T>(this IPublishedContent Content, string PropertyAlias)
+        /// <summary>
+        /// Checks if a property exists and has a value, returns the default for the type if not 
+        /// </summary>
+        /// <param name="Content">Node to get the property value from</param>
+        /// <param name="PropertyAlias">Alias of the property</param>
+        /// <param name="DefaultIfNone">Value to return if missing from Node (default is the Type default - ex: 0, false, "", null, etc.)</param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static T GetSafePropertyValue<T>(this IPublishedContent Content, string PropertyAlias, T DefaultIfNone = default(T))
         {
             if (Content.HasPropertyWithValue(PropertyAlias))
             {
@@ -430,7 +438,7 @@
                 return value;
             }
             else
-            { return default(T); }
+            { return DefaultIfNone; }
         }
 
         ///// <summary>
