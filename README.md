@@ -2,7 +2,7 @@
 
 A collection of Umbraco 8 Helpers/Models created by [Heather Floyd](https://www.HeatherFloyd.com).
 
-Latest NuGet Package available @ [www.nuget.org/packages/Dragonfly.Umbraco8/](https://www.nuget.org/packages/Dragonfly.Umbraco8/)
+[![Nuget Downloads](https://buildstats.info/nuget/Dragonfly.Umbraco8)](https://www.nuget.org/packages/Dragonfly.Umbraco8/)
 
     PM > Install-Package Dragonfly.Umbraco8
 
