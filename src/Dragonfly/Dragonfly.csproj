@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -37,7 +37,7 @@
     <PackageReference Include="Dragonfly.Net" Version="1.25.0" />
     <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.7" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.7" />
-    <PackageReference Include="UmbracoCms.Core" Version="8.1.0" PrivateAssets="All" />
+    <PackageReference Include="UmbracoCms.Core" Version="8.5.4" PrivateAssets="All" />
     <PackageReference Include="UmbracoCms.Web" Version="8.1.0" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup>
